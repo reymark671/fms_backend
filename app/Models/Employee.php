@@ -13,6 +13,11 @@ class Employee extends Model
         'last_name',
         'file_dir',
         'client_id',
+        'SP_number',
+        'Username',
+        'password',
+        'pw',
+        'Status',
     ];
     public function client()
     {

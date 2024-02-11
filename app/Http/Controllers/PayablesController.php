@@ -46,9 +46,7 @@ class PayablesController extends Controller
     public function fetch_payables(Request $request)
     {
         $client_id = $request->input('client_id');
-        $payables = Payable::join('employees', 'table_payables_upload.employee_id', '=', 'employees.id')
-                    ->where('table_payables_upload.client_id', $client_id)
-                    ->select('table_payables_upload.*', 'employees.first_name', 'employees.last_name')
+        $payables = Payable::where('payables.client_id', $client_id)
                     ->get();
         return response()->json(['data' => $payables]);
     }
@@ -56,7 +54,7 @@ class PayablesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'upload_file.*' => 'required|file|mimes:jpeg,png,pdf,jpg|max:20048',
-            'payable_id' => 'required|exists:table_payables_upload,id',
+            'payable_id' => 'required|exists:payables,id',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
