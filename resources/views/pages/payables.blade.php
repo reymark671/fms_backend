@@ -15,7 +15,7 @@
       <table class="table table-bordered" id="employeeTable">
         <thead>
           <tr>
-            <th>Employee Name</th>
+            <th>Description</th>
             <th>Uploaded Files</th>
             <th>Confirmation Upload</th>
             <th>Action</th>
@@ -185,7 +185,7 @@
         fileDirArray.forEach(function(fileDir) {
           var fileName = fileDir.replace(basePath, '');
             modalBodyContent += `
-                <h5><b>Employee Name: </b>${employee.first_name} ${employee.last_name}<br> <b>File Name: </b>${fileName}</h5>
+                <h5><b>Description: </b>${employee.description} <br> <b>File Name: </b>${fileName}</h5>
                 <!-- Add other content based on your requirements -->
                 ${isPdfFile(fileDir) ? 
                     `<iframe src="${fileDir}" width="100%" height="500px"></iframe>` :
@@ -218,9 +218,14 @@
         $('#noDataMessage').hide()
         employeeData.forEach(function(payables) {
           var row = '<tr>';
-          row += '<td>' + payables.first_name + " "+payables.last_name+'</td>';
+          row += '<td>' + payables.description+'</td>';
           row += '<td><a href="#" onclick="openFileModal('+payables.id+', \''+payables.file_dir+'\')">View File</a></td>';
-          row +=  '<td><a href="#" onclick="openFileModal('+payables.id+', \''+payables.response_file+'\')">View File</a></td>';
+          // row +=  '<td><a href="#" onclick="openFileModal('+payables.id+', \''+payables.response_file+'\')">View File</a></td>';
+          if (payables.response_file !== null) {
+            row += '<td><a href="#" onclick="openFileModal(' + payables.id + ', \'' + payables.response_file + '\')">View File</a></td>';
+          } else {
+            row += '<td>No file uploaded yet</td>';
+          }
           row += '<td>';
           row += '<form action="{{ route("update_payables") }}" method="post" id="form_'+payables.id+'" enctype="multipart/form-data">';
           row +='<input type="file" name="upload_file[]" id="btn_id-'+payables.id+'" multiple onchange="toggleFileButtons(this)">';
