@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Client;
+use App\Models\Payroll;
+use App\Models\Payable;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -31,6 +34,15 @@ class DashboardController extends Controller
                 'count' => $group->count(),
             ];
         });
-        return view('pages.dashboard', ['clientCounts' => $clientCounts]);
+        $payroll_count  = Payroll::count();
+        $client  = Client::count();
+        $employees  = Employee::count();
+        $payables  = Payable::count();
+        return view('pages.dashboard', [
+            'clientCounts'  => $client, 
+            'payroll_count' => $payroll_count,
+            'employees'     => $employees,
+            'payables'      => $payables
+        ]);
     }
 }

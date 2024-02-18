@@ -49,6 +49,7 @@ class PayablesController extends Controller
         $token_details = explode("$", $request->input('token'));
         $client_id = $token_details[1];
         $payables = Payable::where('client_id', $client_id)->get();
+        $payables_result=[];
         foreach($payables as $payable)
         {
             $fileDirs = explode('|', $payable->file_dir);

@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\PayablesController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\AdminRegisterController;
 
 
 /*
@@ -29,6 +30,8 @@ Route::middleware(['auth'])->group(function () {
     });
     
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
+    Route::get('/register_admin', [AdminRegisterController::class, 'register_admin'])->name('register_admin');
+    Route::post('/create_admin', [AdminRegisterController::class, 'create_admin'])->name('create_admin');
     Route::get('/clients', [ClientsController::class, 'view_all'])->name('clients');
     Route::get('/fetch_clients', [ClientsController::class, 'fetch_clients'])->name('fetch_clients');
     Route::post('/delete_client', [ClientsController::class, 'delete_client'])->name('delete_client');
@@ -40,13 +43,14 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/update_payables', [PayablesController::class, 'update_payables'])->name('update_payables');
     Route::get('/payroll', [PayrollController::class, 'fetch_payroll_all'])->name('payroll');
     Route::post('/update_payroll', [PayrollController::class, 'update_payroll'])->name('update_payroll');
+    Route::post('/create_payroll', [PayrollController::class, 'create_payroll'])->name('create_payroll');
 
 });
 Route::post('/logout_session', [LogoutController::class, 'logout'])->name('logout_session');
 // Redirect to the login page if the user is not logged in
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
-        return view('welcome');
+        return redirect()->route('home');
     });
     
     Auth::routes();

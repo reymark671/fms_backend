@@ -14,4 +14,12 @@ class Payable extends Model
         'employee_id',
         'description',
     ];
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_id');
+    }
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
+    }
 }
