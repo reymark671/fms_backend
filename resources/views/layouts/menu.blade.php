@@ -30,3 +30,10 @@
         <p>Payroll</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{ route('register_admin') }}" class="nav-link {{ Request::is('register_admin') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-money-check"></i>
+        <p>Add Admin</p>
+    </a>
+</li>
+

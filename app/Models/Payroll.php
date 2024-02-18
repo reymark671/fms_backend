@@ -11,6 +11,7 @@ class Payroll extends Model
     protected $table = 'payroll';
     protected $fillable = [
         'client_id',
+        'employee_id',
         'payroll_start',
         'payroll_end',
         'time_sheet_file',
@@ -20,5 +21,9 @@ class Payroll extends Model
     public function client()
     {
         return $this->belongsTo(Client::class, 'client_id');
+    }
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 }

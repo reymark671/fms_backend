@@ -10,7 +10,9 @@ class PayablesController extends Controller
     //
     public function fetch_payables_all(Request $request)
     {
-        return view('pages.payables');
+        
+        $payable_data = Payable::with('client')->with('employee')->get();
+        return view('pages.payables_1',['payables' => $payable_data]);
     }
     public function upload_payable(Request $request)
     {

@@ -5,14 +5,10 @@
         <div class="row">
             <div class="col-md-4">
                 <div class="small-box bg-info">
-                    <div class="container-fluid">
-                        <div class="row">
-                        @foreach($clientCounts as $status => $data)
-                            <div class="col-md-4 text-center">
-                                <h3 >{{ $data['count'] }}</h3>
-                                <p >{{ $data['label'] }}</p>
-                            </div>
-                            @endforeach
+                    <div class="inner">
+                        <div class="col-md-4 text-center">
+                            <h3>{{ $clientCounts }}</h3>
+                            <p>Clients Count</p>
                         </div>
                     </div>
                     <div class="icon">
@@ -27,13 +23,13 @@
             <div class="col-md-4">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>150</h3>
-                        <p>New Orders</p>
+                        <h3>{{$payroll_count}}</h3>
+                        <p>Payroll Count</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-money-bill"></i>
                     </div>
-                    <a href="#" class="small-box-footer">
+                    <a href="payroll" class="small-box-footer">
                         More info <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
@@ -42,13 +38,28 @@
             <div class="col-md-4">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>150</h3>
-                        <p>New Orders</p>
+                        <h3>{{$payables}}</h3>
+                        <p>Payables Count</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-shopping-cart"></i>
+                        <i class="fas fa-file-invoice-dollar"></i>
+                       
                     </div>
-                    <a href="#" class="small-box-footer">
+                    <a href="payables" class="small-box-footer">
+                        More info <i class="fas fa-arrow-circle-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>{{$employees}}</h3>
+                        <p>Providers Count</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-user"></i> 
+                    </div>
+                    <a href="employees" class="small-box-footer">
                         More info <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
