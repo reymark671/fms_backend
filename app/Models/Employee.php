@@ -14,10 +14,14 @@ class Employee extends Model
         'file_dir',
         'client_id',
         'SP_number',
+        'phone_number',
+        'email',
         'Username',
         'password',
         'pw',
         'Status',
+        'token',
+        'OTP',
     ];
     public function client()
     {

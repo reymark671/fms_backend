@@ -20,5 +20,7 @@ class Client extends Model
         'email',
         'password',
         'status',
+        'api_token',
+        'otp'
     ];
 }

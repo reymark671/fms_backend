@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\EmployeesController;
+use App\Http\Controllers\Admin\TimesheetsController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\PayablesController;
 use App\Http\Controllers\PayrollController;
@@ -44,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payroll', [PayrollController::class, 'fetch_payroll_all'])->name('payroll');
     Route::post('/update_payroll', [PayrollController::class, 'update_payroll'])->name('update_payroll');
     Route::post('/create_payroll', [PayrollController::class, 'create_payroll'])->name('create_payroll');
+    Route::get('/timesheets', [TimesheetsController::class, 'timesheets'])->name('timesheets');
 
 });
 Route::post('/logout_session', [LogoutController::class, 'logout'])->name('logout_session');
