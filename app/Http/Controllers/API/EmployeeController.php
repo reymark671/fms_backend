@@ -7,6 +7,8 @@ use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Timesheet;
 use Illuminate\Http\Request;
+use App\Mail\send_otp;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -128,10 +130,16 @@ class EmployeeController extends Controller
            
             $token_random_str = Str::random(60);
             $token = $token_random_str."$".$employees->id;
-            $employees->update(['api_token' => $token_random_str]);
+            $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+            $subject ="OTP LOGIN CODE";
+            $body ="Here is your OTP CODE. <br><br><b>$otp</b><br><br> Please copy this in the OTP Login Portal to make your login successful.";
+            Mail::to($employees->email)->send(new send_otp($otp, $body, $subject));
+            $employees->update([
+                'token' => $token_random_str,
+                'OTP'     => $otp,
+            ]);
             return response()->json([
-                'message' => 'Login successful',
-                'data'    => $employees,
+                'message' => 'Verification',
                 'token'   => $token,
                 'status'  => 200,
             ]);

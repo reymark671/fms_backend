@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Client;
+use App\Models\Employee;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\send_otp;
@@ -79,8 +80,34 @@ class LoginController extends Controller
         {
             return response()->json(['errors' =>"invalid token", 'status' =>403], 200);
         }
-       
+    }
 
+    public function otp_verification_emp(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'otp' => 'required|string',
+            'token' => 'required|string',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        
+        $tokenDetails = explode("$",$request->input('token'));
+        $token = $tokenDetails[0];
+        $client_id =  $tokenDetails[1];
+        $otp = $request->input('otp');
+        $client = Employee::where('id', $client_id)
+        ->where('OTP', $otp)
+        ->where('token', $token)
+        ->first();
+        if($client)
+        {
+            return response()->json(['success' => $token."$".$client_id, 'status' =>200], 200);
+        }
+        else 
+        {
+            return response()->json(['errors' =>"invalid token", 'status' =>403], 200);
+        }
     }
 }

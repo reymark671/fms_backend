@@ -42,8 +42,8 @@ class EmailSender extends Controller
      
        try
        {
-        $send_mail = new EmployeeSendMail("poknaitz@gmail.com", $request->input('subject'), $request->input('message'),$employee_name);
-        Mail::to('poknaitz@gmail.com')->send($send_mail);
+        $send_mail = new EmployeeSendMail($client_email, $request->input('subject'), $request->input('message'),$employee_name);
+        Mail::to($client_email)->send($send_mail);
        }
        catch(Exception $e)
        {
@@ -66,10 +66,11 @@ class EmailSender extends Controller
         $client_id = $verification_Details[1];
         $token = $verification_Details[0];
         $client = Client::find($client_id);
+        $recipient_email = env('MAIL_SUPPORT');
         $client_mail = MailSender::create([
             'subject'   => $request->input('subject'),
             'message'   => $request->input('message'),
-            'recipient' => 'poknaitz@gmail.com',
+            'recipient' => $recipient_email,
             'sender'    => $client->email,
         ]);
         if(!$client_mail)
@@ -78,8 +79,8 @@ class EmailSender extends Controller
         }
         try
        {
-        $send_mail = new ClientSendMail("poknaitz@gmail.com", $request->input('subject'), $request->input('message'),$client->first_name." ".$client->last_name);
-        Mail::to('poknaitz@gmail.com')->send($send_mail);
+        $send_mail = new ClientSendMail($recipient_email, $request->input('subject'), $request->input('message'),$client->first_name." ".$client->last_name);
+        Mail::to($recipient_email)->send($send_mail);
        }
        catch(Exception $e)
        {

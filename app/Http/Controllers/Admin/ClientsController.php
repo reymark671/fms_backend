@@ -44,7 +44,7 @@ class ClientsController extends Controller
         }
         $client->status = 1;
         $client->save();
-        $clientEmail = "poknaitz@gmail.com";
+        $clientEmail = $client->email;
         Mail::to($clientEmail)->send(new ClientStatusUpdated($client));
         return response()->json(['message' => 'Client status updated successfully']);
     }

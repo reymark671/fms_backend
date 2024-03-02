@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Payroll;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class PayrollController extends Controller
@@ -50,4 +51,17 @@ class PayrollController extends Controller
         $payroll = Payroll::where('client_id', $client_id)->get();
         return response()->json(['data' => $payroll]);
     }
+    public function fetch_payroll_api(Request $request)
+{
+    $client_id = $request->input('client_id');
+    $payroll = Payroll::where('client_id', $client_id)->with('employee')->get();
+
+    foreach ($payroll as &$record) {
+        $file_path = public_path($record->payroll_file);
+        $file_content = base64_encode(File::get($file_path));
+        $record->payroll_file_content = $file_content;
+    }
+
+    return response()->json(['data' => $payroll]);
+}
 }
