@@ -9,6 +9,7 @@ use App\Models\Employee;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\send_otp;
+use App\Mail\OTPSender;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 class LoginController extends Controller
@@ -42,7 +43,7 @@ class LoginController extends Controller
             ]);
             $subject ="OTP LOGIN CODE";
             $body ="Here is your OTP CODE. <br><br><b>$otp</b><br><br> Please copy this in the OTP Login Portal to make your login successful.";
-            Mail::to($client->email)->send(new send_otp($otp, $body, $subject));
+            Mail::to($client->email)->send(new OTPSender($otp, $body, $subject));
             return response()->json([
                 'message' => 'Verification',
                 'token'   => $token,

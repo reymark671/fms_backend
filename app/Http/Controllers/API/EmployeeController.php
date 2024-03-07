@@ -172,26 +172,49 @@ class EmployeeController extends Controller
         }
 
         //get the month para sa compute ng total month
-        $month_from = date("Y-m-01", strtotime($request->input('start_date')));
-        $month_to = date("Y-m-31", strtotime($request->input('start_date')));
+        // $month_from = date("Y-m-01", strtotime($request->input('start_date')));
+        // $month_to = date("Y-m-31", strtotime($request->input('start_date')));
         
+        // $current_time_allocated = Timesheet::where('employee_id', $employee_id)
+        //     ->whereBetween('start_date', [$month_from, $month_to])
+        //     ->whereBetween('end_date', [$month_from, $month_to])
+        //     ->get();
+        // $total_hours_sum = $current_time_allocated->sum('total_hours');
+        // $total_month_hrs = 50 - ($total_hours_sum + $request->input('total_hours'));
+        // $available_hours = 50 - $total_hours_sum ;
+        // if($total_hours_sum>50  )
+        // {
+        //     return  response()->json(['message' => "you exceeded the maximum number of hours for this months", 'status' => 401]);
+        // }
+        // if($total_month_hrs<=0)
+        // {
+        //     return  response()->json([
+        //         'message' => "you will exceeded the maximum number of hours for this duration", 
+        //         'available_hours'=>$available_hours,
+        //         'status' => 401]);
+        // }
+        $week_start = date('Y-m-d', strtotime('monday this week', strtotime($request->input('start_date'))));
+        $week_end = date('Y-m-d', strtotime('sunday this week', strtotime($request->input('start_date'))));
+
         $current_time_allocated = Timesheet::where('employee_id', $employee_id)
-            ->whereBetween('start_date', [$month_from, $month_to])
-            ->whereBetween('end_date', [$month_from, $month_to])
+            ->whereBetween('start_date', [$week_start, $week_end])
+            ->whereBetween('end_date', [$week_start, $week_end])
             ->get();
+
         $total_hours_sum = $current_time_allocated->sum('total_hours');
-        $total_month_hrs = 50 - ($total_hours_sum + $request->input('total_hours'));
-        $available_hours = 50 - $total_hours_sum ;
-        if($total_hours_sum>50  )
-        {
-            return  response()->json(['message' => "you exceeded the maximum number of hours for this month", 'status' => 401]);
+        $total_week_hrs = 50 - ($total_hours_sum + $request->input('total_hours'));
+        $available_hours = 50 - $total_hours_sum;
+
+        if ($total_hours_sum > 50) {
+            return response()->json(['message' => "You exceeded the maximum number of hours for this week ", 'status' => 401]);
         }
-        if($total_month_hrs<=0)
-        {
-            return  response()->json([
-                'message' => "you will exceeded the maximum number of hours for this duration", 
-                'available_hours'=>$available_hours,
-                'status' => 401]);
+
+        if ($total_week_hrs <= 0) {
+            return response()->json([
+                'message' => "You will exceed the maximum number of hours for this week ",
+                'available_hours' => $available_hours,
+                'status' => 401
+            ]);
         }
        
         $timesheet = Timesheet::create([

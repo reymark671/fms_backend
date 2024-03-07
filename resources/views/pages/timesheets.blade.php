@@ -26,12 +26,12 @@
                     <tbody>
                         @foreach($timesheets as $timesheet)
                             <tr >
-                                <td>{{$timesheet->employee->first_name}} {{$timesheet->employee->first_name}}</td>
+                                <td>{{$timesheet->employee->first_name}} {{$timesheet->employee->last_name}}</td>
                                 <td>{{$timesheet->employee->SP_number}}</td>
                                 <td>{{$timesheet->start_date}}  {{$timesheet->start_time}}</td>
                                 <td>{{$timesheet->end_date}}  {{$timesheet->end_time}}</td>
-                                <td>{{$timesheet->end_date}}  {{$timesheet->end_time}}</td>
                                 <td>{{$timesheet->total_hours}} Hours</td>
+                                <td>{{$timesheet->client->first_name}} {{$timesheet->client->last_name}}</td>
                                 <td>
                                     @if($timesheet->status > 0)
                                         Approved

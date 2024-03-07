@@ -27,7 +27,7 @@
         </tbody>
         <tfoot></tfoot>
     </table>
-    @include('pages.modal_embed')
+    @include('pages.modal_clients')
 </div>
 
 <script>
@@ -43,10 +43,10 @@
         fileDirArray.forEach(function (fileDir) {
             var fileName = fileDir.replace(basePath, '');
             fileModalBody.append(`
-                <h5>${fileName}</h5>
                 ${isPdfFile(fileDir) ?
-                    `<iframe src="${fileDir}" width="100%" height="500px"></iframe>` :
-                    `<img src="${fileDir}" class="img-fluid" alt="Uploaded File">`
+                    `<iframe src="${fileDir}" width="100%" height="500px" ></iframe>` :
+                    `<img src="${fileDir}" class="d-block mx-auto img-fluid" alt="Uploaded File">
+                    <center><h5>${fileName}</h5></center>`
                 }
                 <div class="text-center mt-2">
                     <a href="${fileDir}" download="file_name" class="btn btn-primary">Download File</a>

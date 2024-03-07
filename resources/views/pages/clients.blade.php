@@ -15,10 +15,13 @@
     <table class="table" id="clientsTable">
         <thead>
             <tr>
-                <th scope="col" class="col-sm-1 col-md-2 col-lg-4">First Name</th>
-                <th scope="col" class="col-sm-1 col-md-2 col-lg-4">Last Name</th>
-                <th scope="col" class="col-md-2 col-lg-2">Status</th>
-                <th scope="col" class="col-md-1 col-lg-3">Action</th>
+                <th scope="col" class="col-sm-1 col-md-2 col-lg-2">First Name</th>
+                <th scope="col" class="col-sm-1 col-md-2 col-lg-2">Last Name</th>
+                <th scope="col" class="col-sm-1 col-md-2 col-lg-2">Email</th>
+                <th scope="col" class="col-sm-1 col-md-2 col-lg-2">Contact Number</th>
+                <th scope="col" class="col-sm-1 col-md-2 col-lg-1">SS Number</th>
+                <th scope="col" class="col-md-2 col-lg-1">Status</th>
+                <th scope="col" class="col-md-1 col-lg-2">Action</th>
             </tr>
         </thead>
         <tbody id="clientsTableBody">
@@ -261,6 +264,9 @@
             var rowHtml = '<tr>' +
                 '<td>' + client.first_name + '</td>' +
                 '<td>' + client.last_name + '</td>' +
+                '<td>' + client.email + '</td>' +
+                '<td>' + client.contact_number + '</td>' +
+                '<td>' + client.ss_number + '</td>' +
                 '<td><div class="bg-' + statusClass + '"><center>' + getStatusLabel(client.status) + '</center></div></td>' +
                 '<td>'+
                     '<button type="button" id="approved" data-id="'+client.id+'" data-first_name="'+client.first_name+'" data-last_name="'+client.last_name+'" class="btn-action btn-sm rounded-pill btn-success"><i class="fas fa-check"></i></button>'  +

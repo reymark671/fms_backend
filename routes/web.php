@@ -49,6 +49,8 @@ Route::middleware(['auth'])->group(function () {
 
 });
 Route::post('/logout_session', [LogoutController::class, 'logout'])->name('logout_session');
+Route::post('/login_verify', [LogoutController::class, 'login_verify'])->name('login_verify');
+Route::post('/otp_verify', [LogoutController::class, 'otp_verify'])->name('otp_verify');
 // Redirect to the login page if the user is not logged in
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
