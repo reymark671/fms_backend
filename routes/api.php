@@ -36,11 +36,16 @@ Route::post('/decline_timesheet', [EmployeeController::class, 'decline_timesheet
 Route::post('/send_email_cli', [EmailSender::class, 'send_email_cli'])->name('send_email_cli');
 Route::post('/otp_verification', [LoginController::class, 'otp_verification'])->name('otp_verification');
 Route::post('/fetch_payroll_api', [PayrollController::class, 'fetch_payroll_api'])->name('fetch_payroll_api');
+Route::post('/reset_password_client', [LoginController::class, 'reset_password_client'])->name('reset_password_client');
+Route::post('/change_password_client', [LoginController::class, 'change_password_client'])->name('change_password_client');
 
-// employees API
+// employees API 
 Route::post('/sign_in', [EmployeeController::class, 'sign_in'])->name('sign_in');
 Route::post('/timesheet_entry', [EmployeeController::class, 'timesheet_entry'])->name('timesheet_entry');
 Route::post('/timesheets', [EmployeeController::class, 'timesheets'])->name('timesheets');
 Route::post('/send_email_emp', [EmailSender::class, 'send_email_emp'])->name('send_email_emp');
 Route::post('/otp_verification_emp', [LoginController::class, 'otp_verification_emp'])->name('otp_verification_emp');
+Route::post('/reset_password_employee', [LoginController::class, 'reset_password_employee'])->name('reset_password_employee');
+Route::post('/change_password_employee', [LoginController::class, 'change_password_employee'])->name('change_password_employee');
+
 

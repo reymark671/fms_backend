@@ -74,6 +74,7 @@ class PayablesController extends Controller
                 $receipt_file = explode('|', $payable->response_file);
                 foreach($receipt_file as $files)
                 {
+                    $fullPath = public_path($files);
                     if (file_exists($fullPath)) {
                         $fileContent = File::get($fullPath);
                         $base64FileContent = base64_encode($fileContent);

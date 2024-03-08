@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\send_otp;
 use App\Mail\OTPSender;
+use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 class LoginController extends Controller
@@ -110,5 +111,92 @@ class LoginController extends Controller
         {
             return response()->json(['errors' =>"invalid token", 'status' =>403], 200);
         }
+    }
+    public function reset_password_employee(Request $request)
+    {
+        $employee_email =$request->input('email');
+        $pw = Str::random(8);
+        $hashedPassword = Hash::make($pw);
+      
+        $employee = Employee::where('email', $employee_email)->first();
+        if($employee)
+        {
+            $employee->update([
+                'pw' => $pw,
+                'password' => $hashedPassword,
+            ]);
+
+        }
+        else 
+        {
+            return response()->json(['errors' =>"email not found", 'status' =>403], 200);
+        }
+        $url = env('EMPLOYEE_URL');
+        Mail::to($employee->email)->send(new ResetPassword($pw, $url));
+        return response()->json(['success' =>"your password has been sent to your email", 'status' =>200], 200);
+    } 
+    public function reset_password_client(Request $request)
+    {
+        $employee_email =$request->input('email');
+        $pw = Str::random(8);
+        $hashedPassword = Hash::make($pw);
+        $employee = Client::where('email', $employee_email)->first();
+        if($employee)
+        {
+            $employee->update([
+                'pw' => $pw,
+                'password' => $hashedPassword,
+            ]);
+
+        }
+        else 
+        {
+            return response()->json(['errors' =>"email not found", 'status' =>403], 200);
+        }
+        $url = env('CLIENT_URL');
+        Mail::to($employee->email)->send(new ResetPassword($pw,$url));
+        return response()->json(['success' =>"your password has been sent to your email", 'status' =>200], 200);
+    }   
+    public function change_password_client(Request $request)
+    {
+        $tokenDetails = explode("$",$request->input('token'));
+        $newPassword = $request->input('password');
+        if(strlen(trim($newPassword))<=7)
+        {
+            return response()->json(['error' =>"your password is not valid", 'status' =>403], 200);
+        }
+        $hashedPassword = Hash::make($newPassword);
+        $token = $tokenDetails[0];
+        $client_id =  $tokenDetails[1];
+        $client = Client::where('id', $client_id)->first();
+        if($client)
+        {
+            $client->update([
+                'password' => $hashedPassword,
+            ]);
+        }
+        return response()->json(['success' =>"your password has been updated", 'status' =>200], 200);
+
+    }  
+    public function change_password_employee(Request $request)
+    {
+        $tokenDetails = explode("$",$request->input('token'));
+        $newPassword = $request->input('password');
+        if(strlen(trim($newPassword))<=7)
+        {
+            return response()->json(['error' =>"your password is not valid", 'status' =>403], 200);
+        }
+        $hashedPassword = Hash::make($newPassword);
+        $token = $tokenDetails[0];
+        $employee_id =  $tokenDetails[1];
+        $employee = Employee::where('id', $employee_id)->first();
+        if($employee)
+        {
+            $employee->update([
+                'password' => $hashedPassword,
+            ]);
+        }
+        return response()->json(['success' =>"your password has been updated", 'status' =>200], 200);
+
     }
 }

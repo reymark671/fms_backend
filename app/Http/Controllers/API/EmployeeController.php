@@ -8,6 +8,7 @@ use App\Models\Employee;
 use App\Models\Timesheet;
 use Illuminate\Http\Request;
 use App\Mail\send_otp;
+use App\Mail\NewEmployee;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -69,8 +70,9 @@ class EmployeeController extends Controller
             'SP_number' => $sp_number_with_id,
             'Username' => $sp_number_with_id,
         ]);
-
-        return response()->json(['message' => 'employee created successfully', 'status' => 201, 'data' => $employee], 201);
+        $url = env('CLIENT_URL');
+        Mail::to($employee->email)->send(new NewEmployee($sp_number_with_id,$url, $employee->pw));
+        return response()->json(['message' => 'employee created successfully, employees will receive their log in credentials', 'status' => 201, 'data' => $employee], 201);
     }
 
     public function fetch_employees(Request $request)
@@ -184,7 +186,7 @@ class EmployeeController extends Controller
         // $available_hours = 50 - $total_hours_sum ;
         // if($total_hours_sum>50  )
         // {
-        //     return  response()->json(['message' => "you exceeded the maximum number of hours for this months", 'status' => 401]);
+        //     return  response()->json(['message' => "you exceeded the maximum number of hours for this month", 'status' => 401]);
         // }
         // if($total_month_hrs<=0)
         // {
