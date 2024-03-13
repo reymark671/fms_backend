@@ -41,7 +41,10 @@
         fileModalBody.empty();
         var basePath = 'uploads/employees/';
         fileDirArray.forEach(function (fileDir) {
-            var fileName = fileDir.replace(basePath, '');
+        
+            var urlParts = fileDir.split('/');
+            var fileName = urlParts.pop();
+            fileName = decodeURIComponent(fileName);
             fileModalBody.append(`
                 ${isPdfFile(fileDir) ?
                     `<iframe src="${fileDir}" width="100%" height="500px" ></iframe>` :
@@ -49,15 +52,45 @@
                     <center><h5>${fileName}</h5></center>`
                 }
                 <div class="text-center mt-2">
-                    <a href="${fileDir}" download="file_name" class="btn btn-primary">Download File</a>
+                    <a href="#" download="${fileName}" class="btn btn-primary btn_download" data-url="${fileDir}" data-filename="${fileName}">Download File</a>
                 </div>
                 <hr>
             `);
         });
+      
 
         $('#fileModal .modal-dialog').removeClass('modal-sm').addClass('modal-xl');
         $('#fileModal').modal('show');
     }
+    $(document).on('click', '.btn_download', function() {
+        var file_name = $(this).data('filename'); 
+        var url = $(this).data('url'); 
+        getImageBlobFromS3(url,file_name) ;
+    });
+    function getImageBlobFromS3(url,fileName) {
+    $.ajax({
+        url: url,
+        type: 'GET',
+        xhrFields: {
+            responseType: 'blob' 
+        },
+        success: function(data) {
+            downloadBlob(data,fileName);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Error fetching image:', errorThrown);
+        }
+    });
+    function downloadBlob(blob, fileName) {
+    var a = document.createElement('a');
+    a.href = window.URL.createObjectURL(blob);
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click(); 
+    document.body.removeChild(a);
+}
+
+}
 
     function openModalFromTable(employeeId, fileDirs) {
         openFileModal(employeeId, fileDirs);

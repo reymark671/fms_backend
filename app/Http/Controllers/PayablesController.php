@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Payable;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 class PayablesController extends Controller
 {
@@ -61,19 +62,28 @@ class PayablesController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $filePaths = [];
+        // $filePaths = [];
     
-        foreach ($request->file('upload_file') as $file) {
-            $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/payables/admin/'), $fileName);
-            $filePaths[] = 'uploads/payables/admin/' . $fileName;
-        }
+        // foreach ($request->file('upload_file') as $file) {
+        //     $fileName = time() . '_' . $file->getClientOriginalName();
+        //     $file->move(public_path('uploads/payables/admin/'), $fileName);
+        //     $filePaths[] = 'uploads/payables/admin/' . $fileName;
+        // }
         $payables = Payable::find($request->input('payable_id'));
         if (!$payables) {
             return response()->json(['error' => 'payables not found'], 404);
         }
-        $concatenatedFileDir = implode('|', $filePaths);
-        $payables->response_file = $concatenatedFileDir;
+        // $concatenatedFileDir = implode('|', $filePaths);
+        $s3Disk = 's3';
+        $fileUrls = [];
+        foreach ($request->file('upload_file') as $file) {
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $fileUrl = Storage::disk($s3Disk)->putFileAs('uploads/employees/response', $file, $fileName, 'public');
+            $fileUrls[] = Storage::disk($s3Disk)->url($fileUrl);
+        }
+    
+        $concatenatedFileUrls = implode('|', $fileUrls);
+        $payables->response_file = $concatenatedFileUrls;
         $payables->save();
         return response()->json(['data' => 'file was saved']);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Payroll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 class PayrollController extends Controller
 {
     //
@@ -21,19 +22,28 @@ class PayrollController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $filePaths = [];
+        // $filePaths = [];
     
+        // foreach ($request->file('payroll_file') as $file) {
+        //     $fileName = time() . '_' . $file->getClientOriginalName();
+        //     $file->move(public_path('uploads/payroll/payroll_sheet/'), $fileName);
+        //     $filePaths[] = 'uploads/payroll/payroll_sheet/' . $fileName;
+        // }
+    
+        // $concatenatedFileDir = implode('|', $filePaths);
+        $s3Disk = 's3';
+        $fileUrls = [];
         foreach ($request->file('payroll_file') as $file) {
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/payroll/payroll_sheet/'), $fileName);
-            $filePaths[] = 'uploads/payroll/payroll_sheet/' . $fileName;
+            $fileUrl = Storage::disk($s3Disk)->putFileAs('uploads/payroll', $file, $fileName, 'public');
+            $fileUrls[] = Storage::disk($s3Disk)->url($fileUrl);
         }
     
-        $concatenatedFileDir = implode('|', $filePaths);
+        $concatenatedFileUrls = implode('|', $fileUrls);
         $payroll = Payroll::find($request->input('payroll_id'));
         if ($payroll) {
             $payroll->update([
-                'payroll_file' => $concatenatedFileDir,
+                'payroll_file' => $concatenatedFileUrls,
             ]);
         } else {
             return response()->json(['errors' => "payroll not found"], 422);
@@ -53,19 +63,28 @@ class PayrollController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        $filePaths = [];
+        // $filePaths = [];
+        // foreach ($request->file('payroll') as $file) {
+        //     $fileName = time() . '_' . $file->getClientOriginalName();
+        //     $file->move(public_path('uploads/payroll/payroll_sheet/'), $fileName);
+        //     $filePaths[] = 'uploads/payroll/payroll_sheet/' . $fileName;
+        // }
+        // $concatenatedFileDir = implode('|', $filePaths);
+        $s3Disk = 's3';
+        $fileUrls = [];
         foreach ($request->file('payroll') as $file) {
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/payroll/payroll_sheet/'), $fileName);
-            $filePaths[] = 'uploads/payroll/payroll_sheet/' . $fileName;
+            $fileUrl = Storage::disk($s3Disk)->putFileAs('uploads/payroll', $file, $fileName, 'public');
+            $fileUrls[] = Storage::disk($s3Disk)->url($fileUrl);
         }
-        $concatenatedFileDir = implode('|', $filePaths);
+    
+        $concatenatedFileUrls = implode('|', $fileUrls);
         $payroll = Payroll::create([
             'client_id' => $request->input('recipient'),
             'employee_id' => $request->input('provider'),
             'payroll_start' => $request->input('from_date'),
             'payroll_end' => $request->input('to_date'),
-            'payroll_file' => $concatenatedFileDir,
+            'payroll_file' => $concatenatedFileUrls,
         ]);
     
         return response()->json(['message' => 'employee created successfully', 'status' => 201, 'data' => $payroll], 201);

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
@@ -40,15 +41,24 @@ class EmployeeController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $filePaths = [];
+        // $filePaths = [];
 
+        // foreach ($data->file('files_upload') as $file) {
+        //     $fileName = time() . '_' . $file->getClientOriginalName();
+        //     $file->move(public_path('uploads/employees'), $fileName);
+        //     $filePaths[] = 'uploads/employees/' . $fileName;
+        // }
+
+        // $concatenatedFileDir = implode('|', $filePaths);
+        $s3Disk = 's3';
+        $fileUrls = [];
         foreach ($data->file('files_upload') as $file) {
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/employees'), $fileName);
-            $filePaths[] = 'uploads/employees/' . $fileName;
+            $fileUrl = Storage::disk($s3Disk)->putFileAs('uploads/employees', $file, $fileName, 'public');
+            $fileUrls[] = Storage::disk($s3Disk)->url($fileUrl);
         }
-
-        $concatenatedFileDir = implode('|', $filePaths);
+    
+        $concatenatedFileUrls = implode('|', $fileUrls);
         $sp_number = "SPN_" . date("ymd") . $client_id;
         $pw = Str::random(8);
         $hashedPassword = Hash::make($pw);
@@ -58,7 +68,7 @@ class EmployeeController extends Controller
             'email' => $data->input('email'),
             'phone_number' => $data->input('phone_number'),
             'client_id' => $client_id,
-            'file_dir' => $concatenatedFileDir,
+            'file_dir' => $concatenatedFileUrls,
             'SP_number' => $sp_number,
             'Username' => $sp_number,
             'password' => $hashedPassword,
@@ -75,7 +85,7 @@ class EmployeeController extends Controller
         return response()->json(['message' => 'employee created successfully, employees will receive their log in credentials', 'status' => 201, 'data' => $employee], 201);
     }
 
-    public function fetch_employees(Request $request)
+    public function fetch_employees_old(Request $request)
     {
         $credentials = $request->only('token');
         $data = explode("$", $credentials['token']);
@@ -118,6 +128,37 @@ class EmployeeController extends Controller
         }
         return response()->json($employeeData);
     }
+    public function fetch_employees(Request $request)
+    {
+        $credentials = $request->only('token');
+        $data = explode("$", $credentials['token']);
+        $token = $data[0];
+        $client_id = $data[1];
+        $employees = Employee::where('client_id', $client_id)->get();
+    
+        $employeeData = [];
+    
+        foreach ($employees as $employee) {
+            $fileUrls = explode('|', $employee->file_dir); 
+    
+            $employeeData[] = [
+                'id' => $employee->id,
+                'first_name' => $employee->first_name,
+                'last_name' => $employee->last_name,
+                'client_id' => $employee->client_id,
+                'SP_number' => $employee->SP_number,
+                'status' => $employee->Status,
+                'pw' => $employee->pw,
+                'created_at' => $employee->created_at,
+                'updated_at' => $employee->updated_at,
+                'files' => $fileUrls, 
+            ];
+        }
+    
+        return response()->json($employeeData);
+    }
+
+    
 
     public function sign_in(Request $request)
     {

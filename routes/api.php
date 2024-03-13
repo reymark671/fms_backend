@@ -47,5 +47,6 @@ Route::post('/send_email_emp', [EmailSender::class, 'send_email_emp'])->name('se
 Route::post('/otp_verification_emp', [LoginController::class, 'otp_verification_emp'])->name('otp_verification_emp');
 Route::post('/reset_password_employee', [LoginController::class, 'reset_password_employee'])->name('reset_password_employee');
 Route::post('/change_password_employee', [LoginController::class, 'change_password_employee'])->name('change_password_employee');
+Route::post('/test_image_s3', [LoginController::class, 'test_image_s3'])->name('test_image_s3');
 
 

@@ -36,7 +36,12 @@
                                     @endphp
 
                                     @foreach($payable_file as $file)
-                                        <a href="{{ asset($file) }}" target="_blank">{{ str_replace("uploads/payables/","",$file) }}</a><br>
+                                    @php
+                                        $urlParts = explode('/', $file);
+                                        $fileName = array_pop($urlParts);
+                                        $fileName = urldecode($fileName);
+                                    @endphp
+                                        <a href="#" data-url="{{ $file }}" data-filename="{{ $fileName }}" class="btn_download">{{  $fileName  }}</a><br>
                                     @endforeach
                                </td>
                                <td>{{$payable->client->first_name}} {{$payable->client->last_name}}</td>
@@ -48,7 +53,12 @@
                                     @endphp
 
                                     @foreach($payable_file as $file)
-                                        <a href="{{ asset($file) }}" target="_blank">{{ str_replace("uploads/payables/admin/","",$file) }}</a><br>
+                                        @php
+                                            $urlParts = explode('/', $file);
+                                            $fileName = array_pop($urlParts);
+                                            $fileName = urldecode($fileName);
+                                        @endphp
+                                        <a href="#" data-url="{{ $file }}" data-filename="{{ $fileName }}" class="btn_download">{{  $fileName  }}</a><br>
                                     @endforeach
                                     @else
                                     <span>No data</span>
@@ -141,6 +151,36 @@
     });
 
     });
+
+    $(document).on('click', '.btn_download', function(){
+        var url = $(this).data('url');
+        var filename = $(this).data('filename');
+        getImageBlobFromS3(url,filename);
+    })
+    function getImageBlobFromS3(url,fileName) {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob' 
+            },
+            success: function(data) {
+                downloadBlob(data,fileName);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error fetching image:', errorThrown);
+            }
+        });
+    function downloadBlob(blob, fileName) 
+    {
+        var a = document.createElement('a');
+        a.href = window.URL.createObjectURL(blob);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click(); 
+        document.body.removeChild(a);
+    }   
+    }
 </script>
 <style>
     #payable_modal {

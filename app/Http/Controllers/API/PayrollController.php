@@ -57,9 +57,9 @@ class PayrollController extends Controller
     $payroll = Payroll::where('client_id', $client_id)->with('employee')->get();
 
     foreach ($payroll as &$record) {
-        $file_path = public_path($record->payroll_file);
-        $file_content = base64_encode(File::get($file_path));
-        $record->payroll_file_content = $file_content;
+        // $file_path = public_path($record->payroll_file);
+        // $file_content = base64_encode(File::get($file_path));
+        $record->payroll_file_content = explode("|", $record->payroll_file);
     }
 
     return response()->json(['data' => $payroll]);

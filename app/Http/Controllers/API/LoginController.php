@@ -13,6 +13,7 @@ use App\Mail\OTPSender;
 use App\Mail\ResetPassword;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 class LoginController extends Controller
 {
     //
@@ -198,5 +199,19 @@ class LoginController extends Controller
         }
         return response()->json(['success' =>"your password has been updated", 'status' =>200], 200);
 
+    }
+    public function test_image_s3(Request $request)
+    {
+        try {
+            $image = $request->file('file');
+            $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+            $path = 'test_image/' . $filename;
+            $uploadedPath = Storage::disk('s3')->put($path, file_get_contents($image), 'public');
+            $publicUrl = Storage::disk('s3')->url($path);
+    
+            return $publicUrl;
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Payable;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 class PayablesController extends Controller
 {
     //
@@ -22,19 +23,19 @@ class PayablesController extends Controller
         }
         $token_details = explode("$", $request->input('token'));
         $client_id = $token_details[1];
-        $filePaths = [];
-    
+        $s3Disk = 's3';
+        $fileUrls = [];
         foreach ($request->file('files') as $file) {
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/payables'), $fileName);
-            $filePaths[] = 'uploads/payables/' . $fileName;
+            $fileUrl = Storage::disk($s3Disk)->putFileAs('uploads/payables', $file, $fileName, 'public');
+            $fileUrls[] = Storage::disk($s3Disk)->url($fileUrl);
         }
     
-        $concatenatedFileDir = implode('|', $filePaths);
+        $concatenatedFileUrls = implode('|', $fileUrls);
     
         $payables = Payable::create([
             'client_id' => $client_id,
-            'file_dir' => $concatenatedFileDir,
+            'file_dir' => $concatenatedFileUrls,
             'description' =>$request->input('description'),
         ]);
     
@@ -42,59 +43,34 @@ class PayablesController extends Controller
 
     }
     public function fetch_payables(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'token' => 'required',
-        ]);
-        $token_details = explode("$", $request->input('token'));
-        $client_id = $token_details[1];
-        $payables = Payable::where('client_id', $client_id)->get();
-        $payables_result=[];
-        foreach($payables as $payable)
         {
-            $fileDirs = explode('|', $payable->file_dir);
-            $payable_file = [];
-            foreach($fileDirs as $files)
-            {
-                $fullPath = public_path($files);
-                if (file_exists($fullPath)) {
-                    $fileContent = File::get($fullPath);
-                    $base64FileContent = base64_encode($fileContent);
-                    $payable_file[] = [
-                        'file_name' => pathinfo($files, PATHINFO_BASENAME),
-                        'file_content' => $base64FileContent,
-                    ];
-                } else {
-                    $payable_file[] =[];
-                }
+            $validator = Validator::make($request->all(), [
+                'token' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => 'Validation failed'], 400);
             }
-            $receipt_arr =[];
-            if($payable->response_file)
-            {
-                $receipt_file = explode('|', $payable->response_file);
-                foreach($receipt_file as $files)
-                {
-                    $fullPath = public_path($files);
-                    if (file_exists($fullPath)) {
-                        $fileContent = File::get($fullPath);
-                        $base64FileContent = base64_encode($fileContent);
-                        $receipt_arr[] = [
-                            'file_name' => pathinfo($files, PATHINFO_BASENAME),
-                            'file_content' => $base64FileContent,
-                        ];
-                    } else {
-                        $receipt_arr[] =[];
-                    }
-                }
+
+            $token_details = explode("$", $request->input('token'));
+            $client_id = $token_details[1];
+            
+            $payables = Payable::where('client_id', $client_id)->get();
+            $payables_result = [];
+
+            foreach ($payables as $payable) {
+                $fileDirs = $payable->file_dir ? explode('|', $payable->file_dir) : [];
+                $receipt_file = $payable->response_file ? explode('|', $payable->response_file) : [];
+
+                $payables_result[] = [
+                    'id'            => $payable->id,
+                    'files'         => $fileDirs,
+                    'upload_date'   => $payable->created_at,
+                    'description'   => $payable->description,
+                    'receipt'       => $receipt_file,
+                ];
             }
-            $payables_result[] = [
-                'id'            => $payable->id,
-                'files'         => $payable_file,
-                'upload_date'   => $payable->created_at,
-                'description'   => $payable->description,
-                'receipt'       => $receipt_arr
-            ];
+
+            return response()->json(['data' => $payables_result], 200);
         }
-        return response()->json(['data' => $payables_result]);
-    }
 }
