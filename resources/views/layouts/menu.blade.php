@@ -32,13 +32,19 @@
 </li>
 <li class="nav-item">
     <a href="{{ route('timesheets') }}" class="nav-link {{ Request::is('timesheets') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-money-check"></i>
+        <i class="nav-icon fas fa-stopwatch"></i>
         <p>Timesheets</p>
     </a>
 </li>
 <li class="nav-item">
+    <a href="{{ route('resources') }}" class="nav-link {{ Request::is('resources') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-folder-open"></i>
+        <p>Resources</p>
+    </a>
+</li>
+<li class="nav-item">
     <a href="{{ route('register_admin') }}" class="nav-link {{ Request::is('register_admin') ? 'active' : '' }}">
-        <i class="nav-icon fas fa-money-check"></i>
+        <i class="nav-icon fas fa-user-shield"></i>
         <p>Add Admin</p>
     </a>
 </li>

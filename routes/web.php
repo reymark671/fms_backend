@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\TimesheetsController;
+use App\Http\Controllers\Admin\ResourcesController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\PayablesController;
 use App\Http\Controllers\PayrollController;
@@ -46,6 +47,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/update_payroll', [PayrollController::class, 'update_payroll'])->name('update_payroll');
     Route::post('/create_payroll', [PayrollController::class, 'create_payroll'])->name('create_payroll');
     Route::get('/timesheets', [TimesheetsController::class, 'timesheets'])->name('timesheets');
+    Route::get('/resources', [ResourcesController::class, 'resources'])->name('resources');
+    Route::post('/add_resources', [ResourcesController::class, 'add_resources'])->name('add_resources');
+    Route::post('/delete_resources', [ResourcesController::class, 'delete_resources'])->name('delete_resources');
 
 });
 Route::post('/logout_session', [LogoutController::class, 'logout'])->name('logout_session');
