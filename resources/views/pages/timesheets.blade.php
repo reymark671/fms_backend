@@ -19,6 +19,7 @@
                         <th>Time Out</th>
                         <th>Total Hours</th>
                         <th>Client Name</th>
+                        <th>Service Code</th>
                         <th>Status</th>
                         
                     </tr>
@@ -32,6 +33,7 @@
                                 <td>{{$timesheet->end_date}}  {{$timesheet->end_time}}</td>
                                 <td>{{$timesheet->total_hours}} Hours</td>
                                 <td>{{$timesheet->client->first_name}} {{$timesheet->client->last_name}}</td>
+                                <td>{{$timesheet->service_code ?? 'Na'}}</td>
                                 <td>
                                     @if($timesheet->status > 0)
                                         Approved

@@ -8,8 +8,10 @@
                 <th>ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
-                <th>Client ID</th>
+                <th>Client Name</th>
+                <th>Service Code</th>
                 <th>Uploaded File</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -19,8 +21,16 @@
                     <td>{{$data->first_name}}</td>
                     <td>{{$data->last_name}}</td>
                     <td>{{$data->client->first_name }}  {{$data->client->last_name }}</td>
+                    <td>{{$data->service_code ?? 'None'}} </td>
                     <td>
                         <a href="#" onclick="openModalFromTable({{ $data->id }}, '{{ $data->file_dir }}')">View File</a>
+                    </td>
+                    <td>
+
+                        <div class="buttons are-small ">
+                            <button class="button {{$data->service_code ? 'is-primary': 'is-info'}} is-rounded btn_add_service_code" data-id="{{ $data->id }}">{{$data->service_code ? 'Update Service Code': 'Add Service Code'}}</button>
+                          
+                        </div>
                     </td>
                 </tr>                      
             @endforeach
@@ -33,6 +43,50 @@
 <script>
     $(document).ready(function () {
         new DataTable('#employeesTable');
+        var csrf= $('#logout-form').find('input[name="_token"]').val();
+        $(document).on('click', '.btn_add_service_code', function() {
+         
+            const employeeId = $(this).data('id');
+            Swal.fire({
+                title: 'Enter Service Code',
+                input: 'text',
+                inputAttributes: {
+                    autocapitalize: 'off'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                showLoaderOnConfirm: true,
+                preConfirm: (serviceCode) => {
+                    return $.ajax({
+                        url: "{{ route('update_employee') }}",  
+                        type: 'POST',
+                        data: {
+                            id: employeeId,
+                            service_code: serviceCode
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': csrf 
+                        }
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        Swal.showValidationMessage(
+                            `Request failed: ${errorThrown}`
+                        );
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: `Service code updated successfully!`,
+                        icon: 'success'
+                    });
+                    setTimeout(function () {
+                            location.reload();
+                        }, 2000);
+                }
+            });
+        });
+
     });
 
     function openFileModal(employeeId, fileDirs) {

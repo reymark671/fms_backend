@@ -21,8 +21,8 @@
                                 <td>{{ $resource->resource_name }}</td>
                                 <td>{{ $resource->description }}</td>
                                 <td>
-                                    <button class="btn btn-info btn_download" data-url="{{ $resource->url }}" data-filename="{{ $resource->resource_name }}">Download</button>
-                                    <button class="btn btn-danger btn_delete"  data-resource_name="{{ $resource->resource_name }}" data-id="{{ $resource->id }}">Delete</button>
+                                    <button class="button is-info is-rounded is-small btn_download" data-url="{{ $resource->url }}" data-filename="{{ $resource->resource_name }}">Download</button>
+                                    <button class="button is-danger is-rounded is-small btn_delete"  data-resource_name="{{ $resource->resource_name }}" data-id="{{ $resource->id }}">Delete</button>
                                 </td>
                              
                             </tr>

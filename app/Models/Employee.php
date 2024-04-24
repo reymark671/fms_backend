@@ -22,6 +22,7 @@ class Employee extends Model
         'Status',
         'token',
         'OTP',
+        'service_code',
     ];
     public function client()
     {

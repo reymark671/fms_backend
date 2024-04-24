@@ -43,6 +43,13 @@
     </a>
 </li>
 <li class="nav-item">
+    <a href="{{ route('vendors') }}" class="nav-link {{ Request::is('vendors') ? 'active' : '' }}">
+        <i class="nav-icon  fas fa-shopping-cart"></i>
+        <p>Vendor</p>
+    </a>
+</li>
+
+<li class="nav-item">
     <a href="{{ route('register_admin') }}" class="nav-link {{ Request::is('register_admin') ? 'active' : '' }}">
         <i class="nav-icon fas fa-user-shield"></i>
         <p>Add Admin</p>
