@@ -147,4 +147,24 @@ class VendorController extends Controller
             return response()->json(['error' => "no data found"], 401);
 
     }
+    public function change_password_vendor(Request $request)
+    {
+        $tokenDetails = explode("$",$request->input('token'));
+        $newPassword = $request->input('password');
+        if(strlen(trim($newPassword))<=7)
+        {
+            return response()->json(['error' =>"your password is not valid", 'status' =>403], 200);
+        }
+        $hashedPassword = Hash::make($newPassword);
+        $token = $tokenDetails[0];
+        $vendor_id =  $tokenDetails[1];
+        $vendor = Vendor::where('id', $vendor_id)->first();
+        if($vendor)
+        {
+            $vendor->update([
+                'password' => $hashedPassword,
+            ]);
+        }
+        return response()->json(['success' =>"your password has been updated", 'status' =>200], 200);
+    }
 }

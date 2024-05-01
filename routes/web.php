@@ -69,6 +69,9 @@ Route::middleware(['auth'])->group(function () {
     #vendor
     Route::get('/vendors', [VendorController::class, 'fetch_all_vendors'])->name('vendors');
     Route::post('/change_vendor_status', [VendorController::class, 'change_vendor_status'])->name('change_vendor_status');
+    Route::get('/vendor_invoice', [VendorController::class, 'vendor_invoice'])->name('vendor_invoice');
+    Route::post('/update_vendor_invoice', [VendorController::class, 'update_vendor_invoice'])->name('update_vendor_invoice');
+    Route::post('/delete_vendor_invoice', [VendorController::class, 'delete_vendor_invoice'])->name('delete_vendor_invoice');
 
 });
 Route::post('/logout_session', [LogoutController::class, 'logout'])->name('logout_session');

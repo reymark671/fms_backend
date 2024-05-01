@@ -48,6 +48,12 @@
         <p>Vendor</p>
     </a>
 </li>
+<li class="nav-item">
+    <a href="{{ route('vendor_invoice') }}" class="nav-link {{ Request::is('vendor_invoice') ? 'active' : '' }}">
+        <i class="nav-icon  fas fa-shopping-cart"></i>
+        <p>Vendor Invoices</p>
+    </a>
+</li>
 
 <li class="nav-item">
     <a href="{{ route('register_admin') }}" class="nav-link {{ Request::is('register_admin') ? 'active' : '' }}">

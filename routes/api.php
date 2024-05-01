@@ -61,5 +61,6 @@ Route::post('/vendor_verify_otp', [VendorController::class, 'vendor_verify_otp']
 Route::post('/reset_password_vendor', [VendorController::class, 'reset_password_vendor'])->name('reset_password_vendor');
 Route::post('/upload_invoice', [VendorController::class, 'upload_invoice'])->name('upload_invoice');
 Route::post('/fetch_invoices_vendor', [VendorController::class, 'fetch_invoices_vendor'])->name('fetch_invoices_vendor');
+Route::post('/change_password_vendor', [VendorController::class, 'change_password_vendor'])->name('change_password_vendor');
 
 
