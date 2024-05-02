@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\EmployeesController;
 use App\Http\Controllers\Admin\TimesheetsController;
 use App\Http\Controllers\Admin\ResourcesController;
+use App\Http\Controllers\Admin\ServiceCoordinatorController;
+use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\PayablesController;
@@ -72,6 +74,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/vendor_invoice', [VendorController::class, 'vendor_invoice'])->name('vendor_invoice');
     Route::post('/update_vendor_invoice', [VendorController::class, 'update_vendor_invoice'])->name('update_vendor_invoice');
     Route::post('/delete_vendor_invoice', [VendorController::class, 'delete_vendor_invoice'])->name('delete_vendor_invoice');
+
+    #Coordinator
+    Route::get('/service_coordinator_accounts', [ServiceCoordinatorController::class, 'fetch_all_service_coordinator_accounts'])->name('service_coordinator_accounts');
+    Route::post('/change_coordinator_status', [ServiceCoordinatorController::class, 'change_coordinator_status'])->name('change_coordinator_status');
+
+    #reports
+    Route::get('/fetch_all_reports', [ReportsController::class, 'fetch_all_reports'])->name('fetch_all_reports');
+    Route::post('/upload_report', [ReportsController::class, 'upload_report'])->name('upload_report');
+    Route::post('/delete_report', [ReportsController::class, 'delete_report'])->name('delete_report');
 
 });
 Route::post('/logout_session', [LogoutController::class, 'logout'])->name('logout_session');

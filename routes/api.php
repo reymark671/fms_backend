@@ -8,11 +8,12 @@ use App\Http\Controllers\API\PayrollController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\PayablesController;
 use App\Http\Controllers\API\VendorController;
+use App\Http\Controllers\API\CoordinatorController;
 use App\Http\Controllers\EmailSender;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API Routes 
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
@@ -62,5 +63,12 @@ Route::post('/reset_password_vendor', [VendorController::class, 'reset_password_
 Route::post('/upload_invoice', [VendorController::class, 'upload_invoice'])->name('upload_invoice');
 Route::post('/fetch_invoices_vendor', [VendorController::class, 'fetch_invoices_vendor'])->name('fetch_invoices_vendor');
 Route::post('/change_password_vendor', [VendorController::class, 'change_password_vendor'])->name('change_password_vendor');
+
+
+#coordinators API
+Route::post('/create_coordinator_account', [CoordinatorController::class, 'create_coordinator_account'])->name('create_coordinator_account');
+Route::post('/coordinator_sign_in', [CoordinatorController::class, 'coordinator_sign_in'])->name('coordinator_sign_in');
+Route::post('/coordinator_verify_otp', [CoordinatorController::class, 'coordinator_verify_otp'])->name('coordinator_verify_otp');
+Route::post('/fetch_reports', [CoordinatorController::class, 'fetch_reports'])->name('fetch_reports');
 
 

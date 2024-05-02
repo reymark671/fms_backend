@@ -45,13 +45,25 @@
 <li class="nav-item">
     <a href="{{ route('vendors') }}" class="nav-link {{ Request::is('vendors') ? 'active' : '' }}">
         <i class="nav-icon  fas fa-shopping-cart"></i>
-        <p>Vendor</p>
+        <p>Vendor Accounts</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ route('vendor_invoice') }}" class="nav-link {{ Request::is('vendor_invoice') ? 'active' : '' }}">
         <i class="nav-icon  fas fa-shopping-cart"></i>
         <p>Vendor Invoices</p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="{{ route('service_coordinator_accounts') }}" class="nav-link {{ Request::is('service_coordinator_accounts') ? 'active' : '' }}">
+        <i class="nav-icon  fas fa-shopping-cart"></i>
+        <p>Service Coordinators</p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="{{ route('fetch_all_reports') }}" class="nav-link {{ Request::is('fetch_all_reports') ? 'active' : '' }}">
+        <i class="nav-icon  fas fa-shopping-cart"></i>
+        <p>Reports</p>
     </a>
 </li>
 
