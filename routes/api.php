@@ -9,6 +9,7 @@ use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\PayablesController;
 use App\Http\Controllers\API\VendorController;
 use App\Http\Controllers\API\CoordinatorController;
+use App\Http\Controllers\API\ResourcesController;
 use App\Http\Controllers\EmailSender;
 
 /*
@@ -70,5 +71,8 @@ Route::post('/create_coordinator_account', [CoordinatorController::class, 'creat
 Route::post('/coordinator_sign_in', [CoordinatorController::class, 'coordinator_sign_in'])->name('coordinator_sign_in');
 Route::post('/coordinator_verify_otp', [CoordinatorController::class, 'coordinator_verify_otp'])->name('coordinator_verify_otp');
 Route::post('/fetch_reports', [CoordinatorController::class, 'fetch_reports'])->name('fetch_reports');
+
+#resources
+Route::get('/fetch_resources', [ResourcesController::class, 'fetch_resources'])->name('fetch_resources');
 
 
