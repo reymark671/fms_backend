@@ -190,9 +190,7 @@
         });
     </script>
     <style>
-    #resource_modal {
-        z-index: 1050;
-    }
+
     .btn_resources_add {
     background-color: #5498c4 !important;
     color: white;           

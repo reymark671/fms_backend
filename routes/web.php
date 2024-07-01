@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\ResourcesController;
 use App\Http\Controllers\Admin\ServiceCoordinatorController;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\VendorController;
+use App\Http\Controllers\Admin\ServiceCategoryController;
+use App\Http\Controllers\Admin\ServiceCodeController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\PayablesController;
 use App\Http\Controllers\PayrollController;
@@ -18,7 +20,7 @@ use App\Http\Controllers\AdminRegisterController;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes  
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
@@ -39,6 +41,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/register_admin', [AdminRegisterController::class, 'register_admin'])->name('register_admin');
     Route::post('/create_admin', [AdminRegisterController::class, 'create_admin'])->name('create_admin');
 
+    #configuration
+    #service category
+    Route::get('/service_category', [ServiceCategoryController::class, 'index'])->name('service_category');
+    Route::post('/create_category', [ServiceCategoryController::class, 'create'])->name('create_category');
+    Route::get('/service_code', [ServiceCodeController::class, 'index'])->name('service_code');
+    Route::get('/service-categories', [ServiceCategoryController::class, 'getCategories']);
+    Route::resource('service-codes', ServiceCodeController::class);
+    Route::get('service-codes/{id}/edit', [ServiceCodeController::class, 'edit']);
+    Route::delete('/service-categories/{id}', [ServiceCategoryController::class, 'destroy'])->name('service-categories.destroy');
+    Route::put('/service-categories/{id}', [ServiceCategoryController::class, 'update'])->name('service-categories.update');
     #Clients
     Route::get('/clients', [ClientsController::class, 'view_all'])->name('clients');
     Route::get('/fetch_clients', [ClientsController::class, 'fetch_clients'])->name('fetch_clients');

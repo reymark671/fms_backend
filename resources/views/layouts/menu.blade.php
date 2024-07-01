@@ -44,27 +44,50 @@
 </li>
 <li class="nav-item">
     <a href="{{ route('vendors') }}" class="nav-link {{ Request::is('vendors') ? 'active' : '' }}">
-        <i class="nav-icon  fas fa-shopping-cart"></i>
+        <i class="nav-icon fas fa-users"></i>
         <p>Vendor Accounts</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ route('vendor_invoice') }}" class="nav-link {{ Request::is('vendor_invoice') ? 'active' : '' }}">
-        <i class="nav-icon  fas fa-shopping-cart"></i>
+        <i class="nav-icon  fas fa-file-invoice"></i>
         <p>Vendor Invoices</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ route('service_coordinator_accounts') }}" class="nav-link {{ Request::is('service_coordinator_accounts') ? 'active' : '' }}">
-        <i class="nav-icon  fas fa-shopping-cart"></i>
+        <i class="nav-icon  fas fa-people-arrows"></i>
         <p>Service Coordinators</p>
     </a>
 </li>
 <li class="nav-item">
     <a href="{{ route('fetch_all_reports') }}" class="nav-link {{ Request::is('fetch_all_reports') ? 'active' : '' }}">
-        <i class="nav-icon  fas fa-shopping-cart"></i>
+        <i class="nav-icon  fas fa-file-pdf"></i>
         <p>Reports</p>
     </a>
+</li>
+<li class="nav-item has-treeview {{ Request::is('clients*') || Request::is('employees*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ Request::is('clients*') || Request::is('employees*') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-dharmachakra"></i>
+        <p>
+            Configuration
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="{{ route('service_category') }}" class="nav-link {{ Request::is('service_category') ? 'active' : '' }}">
+                <i class="nav-icon 	fas fa-ethernet"></i>
+                <p>Service Code Category</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('service_code') }}" class="nav-link {{ Request::is('service_code') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-file-code"></i>
+                <p>Service Code</p>
+            </a>
+        </li>
+    </ul>
 </li>
 
 <li class="nav-item">
@@ -73,4 +96,5 @@
         <p>Add Admin</p>
     </a>
 </li>
+
 

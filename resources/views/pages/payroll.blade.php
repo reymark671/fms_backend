@@ -220,9 +220,5 @@
     
   }
 </script>
-<style>
-    #fileModal {
-        z-index: 1050;
-    }
-</style>
+
 @endsection

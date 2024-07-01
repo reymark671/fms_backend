@@ -195,9 +195,7 @@
     }
 </script>
 <style>
-    #payroll_modal {
-        z-index: 1050;
-    }
+   
     .btn_add_payroll {
     background-color: #5498c4 !important;
     color: white;           
