@@ -199,9 +199,5 @@
             }
    })
  </script>
- <style>
-    #invoice_receipt {
-        z-index: 1050;
-    }
-</style>
+ 
 @endsection

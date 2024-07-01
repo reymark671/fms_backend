@@ -196,9 +196,7 @@ $(document).ready(function(){
 });
  </script>
  <style>
-#report_modal {
-        z-index: 1050;
-    }
+
     .btn_reports_add {
     background-color: #5498c4 !important;
     color: white;           

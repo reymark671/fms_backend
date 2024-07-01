@@ -182,9 +182,5 @@
     }   
     }
 </script>
-<style>
-    #payable_modal {
-        z-index: 1050;
-    }
-</style>
+
 @endsection

@@ -339,9 +339,7 @@ function updateEmployeeDataTable(data) {
     transform:rotate(360deg)
   }
 }
-#modal-employee-data {
-    z-index: 1050; 
-}
+
 .modal-backdrop {
     z-index: 1040; 
 }
