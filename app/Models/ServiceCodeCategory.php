@@ -9,7 +9,7 @@ class ServiceCodeCategory extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'service_code_description',
+        'category_description',
     ];
     public function serviceCodes()
     {
