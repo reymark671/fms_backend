@@ -72,8 +72,8 @@
         <p>Client Spending Plan</p>
     </a>
 </li>
-<li class="nav-item has-treeview {{ Request::is('clients*') || Request::is('employees*') ? 'menu-open' : '' }}">
-    <a href="#" class="nav-link {{ Request::is('clients*') || Request::is('employees*') ? 'active' : '' }}">
+<li class="nav-item has-treeview {{ Request::is('service_category*') || Request::is('service_code*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ Request::is('service_category*') || Request::is('service_code*') ? 'active' : '' }}">
         <i class="nav-icon fas fa-dharmachakra"></i>
         <p>
             Configuration
