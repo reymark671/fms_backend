@@ -43,6 +43,13 @@
     </a>
 </li>
 <li class="nav-item">
+    <a href="{{ route('client_resources') }}" class="nav-link {{ Request::is('client_resources') ? 'active' : '' }}">
+        <i class="nav-icon fas fa-folder-open"></i>
+        <p>Client Files</p>
+    </a>
+</li>
+
+<li class="nav-item">
     <a href="{{ route('vendors') }}" class="nav-link {{ Request::is('vendors') ? 'active' : '' }}">
         <i class="nav-icon fas fa-users"></i>
         <p>Vendor Accounts</p>

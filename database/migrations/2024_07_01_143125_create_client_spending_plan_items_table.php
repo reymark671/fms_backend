@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('client_spending_plan_id');
             $table->unsignedBigInteger('service_code_id');
-            $table->float('allocated_budget');
+            $table->decimal('allocated_budget', 15, 2);
             $table->timestamps();
 
             $table->foreign('client_spending_plan_id')

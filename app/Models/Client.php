@@ -27,4 +27,9 @@ class Client extends Model
     {
         return $this->hasMany(ClientSpendingPlan::class);
     }
+
+    public function files_upload()
+    {
+        return $this->hasMany(ClientFileUpload::class);
+    }
 }

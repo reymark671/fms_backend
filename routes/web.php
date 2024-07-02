@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\ServiceCategoryController;
 use App\Http\Controllers\Admin\ServiceCodeController;
 use App\Http\Controllers\Admin\ClientSpendingPlanController;
+use App\Http\Controllers\Admin\ClientResouceController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\PayablesController;
 use App\Http\Controllers\PayrollController;
@@ -88,6 +89,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/resources', [ResourcesController::class, 'resources'])->name('resources');
     Route::post('/add_resources', [ResourcesController::class, 'add_resources'])->name('add_resources');
     Route::post('/delete_resources', [ResourcesController::class, 'delete_resources'])->name('delete_resources');
+
+    #client files
+    Route::get('/client_resources', [ClientResouceController::class, 'index'])->name('client_resources');
 
     #vendor
     Route::get('/vendors', [VendorController::class, 'fetch_all_vendors'])->name('vendors');

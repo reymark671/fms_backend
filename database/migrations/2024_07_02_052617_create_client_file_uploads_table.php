@@ -11,18 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('client_spending_plans', function (Blueprint $table) {
+        Schema::create('client_file_uploads', function (Blueprint $table) {
             $table->id();
+            $table->string('description');
+            $table->string('report_file');
             $table->unsignedBigInteger('client_id');
-            $table->decimal('total_budget', 15, 2);
-            $table->date('from');
-            $table->date('to');
             $table->timestamps();
-        
-            $table->foreign('client_id')
-                  ->references('id')
-                  ->on('clients')
-                  ->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 
@@ -31,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('client_spending_plans');
+        Schema::dropIfExists('client_file_uploads');
     }
 };

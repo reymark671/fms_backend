@@ -74,5 +74,7 @@ Route::post('/fetch_reports', [CoordinatorController::class, 'fetch_reports'])->
 
 #resources
 Route::get('/fetch_resources', [ResourcesController::class, 'fetch_resources'])->name('fetch_resources');
+Route::post('/upload_files', [ResourcesController::class, 'store_file'])->name('upload_files');
+Route::post('/fetch_file_uploads', [ResourcesController::class, 'fetch_store_file'])->name('fetch_file_uploads');
 
 
