@@ -23,4 +23,8 @@ class Client extends Model
         'api_token',
         'otp'
     ];
+    public function spendingPlans()
+    {
+        return $this->hasMany(ClientSpendingPlan::class);
+    }
 }

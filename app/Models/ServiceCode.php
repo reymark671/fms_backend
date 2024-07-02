@@ -17,4 +17,8 @@ class ServiceCode extends Model
     {
         return $this->belongsTo(ServiceCodeCategory::class, 'service_code_category_id');
     }
+    public function spendingPlans()
+    {
+        return $this->hasMany(ClientSpendingPlan::class, 'service_code');
+    }
 }

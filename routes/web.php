@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\VendorController;
 use App\Http\Controllers\Admin\ServiceCategoryController;
 use App\Http\Controllers\Admin\ServiceCodeController;
+use App\Http\Controllers\Admin\ClientSpendingPlanController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\PayablesController;
 use App\Http\Controllers\PayrollController;
@@ -45,12 +46,20 @@ Route::middleware(['auth'])->group(function () {
     #service category
     Route::get('/service_category', [ServiceCategoryController::class, 'index'])->name('service_category');
     Route::post('/create_category', [ServiceCategoryController::class, 'create'])->name('create_category');
-    Route::get('/service_code', [ServiceCodeController::class, 'index'])->name('service_code');
     Route::get('/service-categories', [ServiceCategoryController::class, 'getCategories']);
-    Route::resource('service-codes', ServiceCodeController::class);
-    Route::get('service-codes/{id}/edit', [ServiceCodeController::class, 'edit']);
     Route::delete('/service-categories/{id}', [ServiceCategoryController::class, 'destroy'])->name('service-categories.destroy');
     Route::put('/service-categories/{id}', [ServiceCategoryController::class, 'update'])->name('service-categories.update');
+    #service_code
+    Route::get('/service_code', [ServiceCodeController::class, 'index'])->name('service_code');
+    Route::resource('service-codes', ServiceCodeController::class);
+    Route::get('service-codes/{id}/edit', [ServiceCodeController::class, 'edit']);
+
+    #spending plan
+    Route::resource('client-spending-plan', ClientSpendingPlanController::class);
+    Route::get('client-spending-plan/{id}/download', [ClientSpendingPlanController::class, 'download'])->name('client-spending-plan.download');
+
+
+
     #Clients
     Route::get('/clients', [ClientsController::class, 'view_all'])->name('clients');
     Route::get('/fetch_clients', [ClientsController::class, 'fetch_clients'])->name('fetch_clients');
