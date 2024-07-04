@@ -19,7 +19,7 @@
                 <th scope="col" class="col-sm-1 col-md-2 col-lg-2">Last Name</th>
                 <th scope="col" class="col-sm-1 col-md-2 col-lg-2">Email</th>
                 <th scope="col" class="col-sm-1 col-md-2 col-lg-2">Contact Number</th>
-                <th scope="col" class="col-sm-1 col-md-2 col-lg-1">SS Number</th>
+                <th scope="col" class="col-sm-1 col-md-2 col-lg-1">UCI Number</th>
                 <th scope="col" class="col-md-2 col-lg-1">Status</th>
                 <th scope="col" class="col-md-1 col-lg-2">Action</th>
             </tr>
@@ -133,7 +133,7 @@
                   <table class="table table-striped">
                     <tbody>
                       <tr>
-                        <th scope="row" class="text-right">SS Number:</th>
+                        <th scope="row" class="text-right">UCI Number:</th>
                         <td class="text-left">${clientDetails.ss_number}</td>
                       </tr>
                       <tr>

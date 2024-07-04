@@ -10,6 +10,7 @@ use App\Http\Controllers\API\PayablesController;
 use App\Http\Controllers\API\VendorController;
 use App\Http\Controllers\API\CoordinatorController;
 use App\Http\Controllers\API\ResourcesController;
+use App\Http\Controllers\API\HiredEmployeesController;
 use App\Http\Controllers\EmailSender;
 
 /*
@@ -48,6 +49,12 @@ Route::post('/decline_timesheet', [EmployeeController::class, 'decline_timesheet
 Route::post('/sign_in', [EmployeeController::class, 'sign_in'])->name('sign_in');
 Route::post('/timesheet_entry', [EmployeeController::class, 'timesheet_entry'])->name('timesheet_entry');
 Route::post('/timesheets', [EmployeeController::class, 'timesheets'])->name('timesheets');
+
+#Hired Employees
+Route::post('/fetch_available_employees', [HiredEmployeesController::class, 'fetch_available_employees'])->name('fetch_available_employees');
+Route::post('/hired_employee', [HiredEmployeesController::class, 'hired_employee'])->name('hired_employee');
+Route::post('/fetch_client_employee', [HiredEmployeesController::class, 'fetch_client_employee'])->name('fetch_client_employee');
+Route::post('/terminate_employee', [HiredEmployeesController::class, 'terminate_employee'])->name('terminate_employee');
 
 // employees login API 
 Route::post('/send_email_emp', [EmailSender::class, 'send_email_emp'])->name('send_email_emp');

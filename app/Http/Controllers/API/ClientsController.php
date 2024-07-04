@@ -22,7 +22,7 @@ class ClientsController extends Controller
             $validator = Validator::make($request->all(), [
                 'first_name' => 'required|string',
                 'last_name' => 'required|string',
-                'ss_number' => 'required|integer|unique:clients',
+                'ss_number' => 'required|string|unique:clients',
                 'address' => 'required|string',
                 'city' => 'required|string',
                 'state' => 'required|string',
