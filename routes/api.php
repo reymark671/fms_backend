@@ -49,6 +49,10 @@ Route::post('/decline_timesheet', [EmployeeController::class, 'decline_timesheet
 Route::post('/sign_in', [EmployeeController::class, 'sign_in'])->name('sign_in');
 Route::post('/timesheet_entry', [EmployeeController::class, 'timesheet_entry'])->name('timesheet_entry');
 Route::post('/timesheets', [EmployeeController::class, 'timesheets'])->name('timesheets');
+Route::get('/client_fetch', [EmployeeController::class, 'client_fetch'])->name('client_fetch');
+Route::post('/time_in', [EmployeeController::class, 'time_in'])->name('time_in');
+Route::post('/time_out', [EmployeeController::class, 'time_out'])->name('time_out');
+Route::get('/check_time_in', [EmployeeController::class, 'check_time_in'])->name('check_time_in');
 
 #Hired Employees
 Route::post('/fetch_available_employees', [HiredEmployeesController::class, 'fetch_available_employees'])->name('fetch_available_employees');

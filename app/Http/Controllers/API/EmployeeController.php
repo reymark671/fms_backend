@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Timesheet;
+use App\Models\HiredEmployees;
 use Illuminate\Http\Request;
 use App\Mail\send_otp;
 use App\Mail\NewEmployee;
@@ -198,6 +199,8 @@ class EmployeeController extends Controller
             'start_date'    => 'required|date',
             'start_time'    => 'required|date_format:H:i',
             'end_date'      => 'required|date',
+            'service_code'  => 'required|numeric|exists:service_codes,code',
+            'client_id'     => 'required|numeric|exists:clients,id',
             'end_time'      => 'required|date_format:H:i',
             'total_hours'   => 'required|string',
         ]);
@@ -214,28 +217,6 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'Unregistered', 'status' => 401]);
         }
 
-        //get the month para sa compute ng total month
-        // $month_from = date("Y-m-01", strtotime($request->input('start_date')));
-        // $month_to = date("Y-m-31", strtotime($request->input('start_date')));
-        
-        // $current_time_allocated = Timesheet::where('employee_id', $employee_id)
-        //     ->whereBetween('start_date', [$month_from, $month_to])
-        //     ->whereBetween('end_date', [$month_from, $month_to])
-        //     ->get();
-        // $total_hours_sum = $current_time_allocated->sum('total_hours');
-        // $total_month_hrs = 50 - ($total_hours_sum + $request->input('total_hours'));
-        // $available_hours = 50 - $total_hours_sum ;
-        // if($total_hours_sum>50  )
-        // {
-        //     return  response()->json(['message' => "you exceeded the maximum number of hours for this month", 'status' => 401]);
-        // }
-        // if($total_month_hrs<=0)
-        // {
-        //     return  response()->json([
-        //         'message' => "you will exceeded the maximum number of hours for this duration", 
-        //         'available_hours'=>$available_hours,
-        //         'status' => 401]);
-        // }
         $week_start = date('Y-m-d', strtotime('monday this week', strtotime($request->input('start_date'))));
         $week_end = date('Y-m-d', strtotime('sunday this week', strtotime($request->input('start_date'))));
 
@@ -268,7 +249,8 @@ class EmployeeController extends Controller
             'specification' => $request->input('specification'),
             'total_hours'   => $request->input('total_hours'),
             'employee_id'   => $employee_data->id,
-            'client_id'     => $employee_data->client_id,
+            'client_id'     => $request->input('client_id'),
+            'service_code'  => $request->input('service_code'),
         ]);
 
         return response()->json(['message' => 'timesheet was added successfully', 'status' => 201, 'data' => $timesheet], 201);
@@ -316,5 +298,103 @@ class EmployeeController extends Controller
             return response()->json(['message' => 'timesheet not found', 'status' => 404], 404);
         }
     }
+
+    public function client_fetch(Request $request)
+    {
+        try {
+            $token = $request->bearerToken();
+            $verification_Details = explode("$", $token);
+            $employee_id = $verification_Details[1];
+            $token = $verification_Details[0];
+            $clients = HiredEmployees::where('employee_id', $employee_id)
+            ->with(['client' => function($query) {
+                $query->select('id', 'first_name', 'last_name');
+            }])
+            ->get();
+            return response()->json(['clients' => $clients, 'status' => 200], 200);
+        } 
+        catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function time_in(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'service_code'  => 'required|numeric|exists:service_codes,code',
+            'client_id'     => 'required|numeric|exists:clients,id',
+        ], [
+            'client_id.exists' => 'Please Select a Client before Time Entry.',
+            'client_id.numeric' => 'Please Select a Client before Time Entry.',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+        $token = $request->bearerToken();
+        $verification_Details = explode("$", $token);
+        $employee_id = $verification_Details[1];
+        $token = $verification_Details[0];
+        $date = date("Y-m-d"); 
+        $time = date("H:i:s");
+        $timesheet = Timesheet::create([
+            'start_date'    => $date,
+            'start_time'    => $time,
+            'employee_id'   => $employee_id,
+            'client_id'     => $request->input('client_id'),
+            'service_code'  => $request->input('service_code'),
+        ]);
+
+
+        return response()->json(['timesheet' => $timesheet, 'status' => 200], 200);
+        
+    }
+
+    public function time_out(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'timesheet_Id' => 'required|numeric|exists:timesheets,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $timesheet = Timesheet::find($request->input('timesheet_Id'));
+
+        if (!$timesheet) {
+            return response()->json(['error' => 'Timesheet not found'], 404);
+        }
+
+        $endDate = date("Y-m-d");
+        $endTime = date("H:i:s");
+
+
+        $startDateTime = new \DateTime($timesheet->start_date . ' ' . $timesheet->start_time);
+        $endDateTime = new \DateTime($endDate . ' ' . $endTime);
+        $interval = $startDateTime->diff($endDateTime);
+        $totalHours = $interval->h + ($interval->days * 24) + ($interval->i / 60) + ($interval->s / 3600);
+
+        
+        $timesheet->end_date = $endDate;
+        $timesheet->end_time = $endTime;
+        $timesheet->total_hours = $totalHours; 
+        $timesheet->save();
+
+        return response()->json(['timesheet' => $timesheet, 'status' => 200], 200);
+    }
+
+    public function check_time_in(Request $request)
+    {
+        $token = $request->bearerToken();
+        $verification_Details = explode("$", $token);
+        $employee_id = $verification_Details[1];
+        $token = $verification_Details[0];
+        $timesheet = Timesheet::where('employee_id', $employee_id)
+            ->where('end_date', null)
+            ->where('end_time', null)
+            ->first();  
+        return response()->json(['timesheet' => $timesheet, 'status' => 200], 200);
+    }
+
 
 }

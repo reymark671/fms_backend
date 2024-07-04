@@ -16,6 +16,7 @@ class Timesheet extends Model
         'total_hours',
         'specification',
         'status',
+        'service_code',
         'client_id',
         'employee_id',
     ];
