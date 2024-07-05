@@ -263,7 +263,9 @@ class EmployeeController extends Controller
         $verification_Details = explode("$", $token);
         $employee_id = $verification_Details[1];
         $token = $verification_Details[0];
-        $timesheets = Timesheet::where('employee_id', $employee_id)->get();
+        $timesheets = Timesheet::where('employee_id', $employee_id)->with(['client' => function($query) {
+            $query->select('id', 'first_name', 'last_name');
+        }])->get();
         return response()->json(['message' => 'query successful', 'status' => 201, 'data' => $timesheets], 201);
         
     }
