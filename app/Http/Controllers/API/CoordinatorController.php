@@ -15,6 +15,11 @@ use App\Mail\send_otp;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\OTPSender;
 use App\Models\Reports;
+use App\Models\Payable;
+use Illuminate\Support\Collection;
+use App\Models\Payroll;
+use App\Models\ClientFileUpload;
+use App\Models\CoordinatorAssignment;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 
@@ -68,7 +73,7 @@ class CoordinatorController extends Controller
             ]);
            
         } else {
-            return response()->json(['message' => 'Invalid email or password', 'status' => 401]);
+            return response()->json(['message' => 'Invalid email or password', 'status' => $coordinator]);
         }
     }
 
@@ -109,9 +114,89 @@ class CoordinatorController extends Controller
         {
             return response()->json(['error' => 'Validation failed'], 400);
         }
-        $reports = Reports::get();
+        $fms_reports        = Reports::get();
+        $assignedClients    = CoordinatorAssignment::where('coordinator_id', $coordinator_id)->pluck('client_id');
+        $payables_report    = Payable::whereIn('id', $assignedClients)
+                                 ->whereNotNull('response_file')
+                                 ->with(['client' => function($query) {
+                                    $query->select('id', 'first_name', 'last_name');
+                                }])
+                                 ->get();
+        $payroll_report     = Payroll::whereIn('id', $assignedClients)
+                                ->with(['client' => function($query) {
+                                    $query->select('id', 'first_name', 'last_name');
+                                }])
+                                ->get();
+        $client_file        = ClientFileUpload::whereIn('id', $assignedClients)
+                                ->with(['client' => function($query) {
+                                    $query->select('id', 'first_name', 'last_name');
+                                }])->get();
+        $mergedReports      = new Collection();
 
-        return response()->json(['data' => $reports], 200);
-    
+        foreach ($fms_reports as $fms_report) {
+            $fms_report->report_type_data = "fms report";
+            $mergedReports->push($fms_report);
+        }
+
+        foreach ($payables_report as $payable) {
+            $payable->report_type_data = "payables report";
+            $payable->report_file = $payable->response_file;
+            $mergedReports->push($payable);
+        }
+
+        foreach ($payroll_report as $payroll) {
+            $payroll->report_type_data = "payroll report";
+            $payable->report_file = $payable->payroll_file;
+            $mergedReports->push($payroll);
+        }
+
+        foreach ($client_file as $file) {
+            $file->report_type_data = "client file";
+            $mergedReports->push($file);
+        }
+        return response()->json(['data' => $mergedReports], 200);
     }
+    public function reset_password_coordinator(Request $request)
+    {
+        $vendor_email =$request->input('email');
+        $pw = Str::random(8);
+        $hashedPassword = Hash::make($pw);
+      
+        $vendor = Coordinator::where('email', $vendor_email)->first();
+        if($vendor)
+        {
+            $vendor->update([
+                'password' => $hashedPassword,
+            ]);
+
+        }
+        else 
+        {
+            return response()->json(['errors' =>"email not found", 'status' =>403], 200);
+        }
+        $url = env('VENDOR_URL');
+        Mail::to($vendor->email)->send(new ResetPassword($pw, $url));
+        return response()->json(['success' =>"your password has been sent to your email", 'status' =>200], 200);
+    } 
+    public function change_password_coordinator(Request $request)
+    {
+        $tokenDetails = explode("$",$request->input('token'));
+        $newPassword = $request->input('password');
+        if(strlen(trim($newPassword))<=7)
+        {
+            return response()->json(['error' =>"your password is not valid", 'status' =>403], 200);
+        }
+        $hashedPassword = Hash::make($newPassword);
+        $token = $tokenDetails[0];
+        $vendor_id =  $tokenDetails[1];
+        $vendor = Coordinator::where('id', $vendor_id)->first();
+        if($vendor)
+        {
+            $vendor->update([
+                'password' => $hashedPassword,
+            ]);
+        }
+        return response()->json(['success' =>"your password has been updated", 'status' =>200], 200);
+    }
+    
 }

@@ -103,6 +103,8 @@ Route::middleware(['auth'])->group(function () {
     #Coordinator
     Route::get('/service_coordinator_accounts', [ServiceCoordinatorController::class, 'fetch_all_service_coordinator_accounts'])->name('service_coordinator_accounts');
     Route::post('/change_coordinator_status', [ServiceCoordinatorController::class, 'change_coordinator_status'])->name('change_coordinator_status');
+    Route::post('/fetch_available_clients', [ServiceCoordinatorController::class, 'fetch_available_clients'])->name('fetch_available_clients');
+    Route::post('/clients_assignment', [ServiceCoordinatorController::class, 'clients_assignment'])->name('clients_assignment');
 
     #reports
     Route::get('/fetch_all_reports', [ReportsController::class, 'fetch_all_reports'])->name('fetch_all_reports');

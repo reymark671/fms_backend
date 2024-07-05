@@ -25,4 +25,8 @@ class Coordinator extends Model
         'otp',
         'is_active'
     ];
+    public function assignments()
+    {
+        return $this->hasMany(CoordinatorAssignment::class, 'coordinator_id');
+    }
 }

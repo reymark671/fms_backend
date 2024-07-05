@@ -82,6 +82,8 @@ Route::post('/create_coordinator_account', [CoordinatorController::class, 'creat
 Route::post('/coordinator_sign_in', [CoordinatorController::class, 'coordinator_sign_in'])->name('coordinator_sign_in');
 Route::post('/coordinator_verify_otp', [CoordinatorController::class, 'coordinator_verify_otp'])->name('coordinator_verify_otp');
 Route::post('/fetch_reports', [CoordinatorController::class, 'fetch_reports'])->name('fetch_reports');
+Route::post('/reset_password_coordinator', [CoordinatorController::class, 'reset_password_coordinator'])->name('reset_password_coordinator');
+Route::post('/change_password_coordinator', [CoordinatorController::class, 'change_password_coordinator'])->name('change_password_coordinator');
 
 #resources
 Route::get('/fetch_resources', [ResourcesController::class, 'fetch_resources'])->name('fetch_resources');
