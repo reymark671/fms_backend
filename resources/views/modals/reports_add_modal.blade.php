@@ -9,6 +9,7 @@
                         <div class="mb-3">
                             <label for="exampleInputEmail1" class="form-label">Report Destinaton Portal</label>
                             <select class="form-control" id="report_destination" name="report_destination" required>
+                                <option value="">Select Destination Portal</option>
                                 <option value="1">Coordinators</option>
                                 <option value="2">Employees</option>
                                 <option value="3">Clients</option>
