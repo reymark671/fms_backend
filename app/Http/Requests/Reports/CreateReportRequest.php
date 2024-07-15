@@ -28,7 +28,7 @@ class CreateReportRequest extends FormRequest
             'description' =>'required|max:255',
             'report_date' =>'required|date',
             'uploaded_by' => 'max:255',
-            'report_file.*' => 'required|file|mimes:jpg,jpeg,png,bmp',
+            'report_file.*' => 'required|file|mimes:jpg,jpeg,png,bmp,pdf,xlsx',
         ];
     }
     protected function failedValidation(Validator $validator): void
