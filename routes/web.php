@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
     #Clients
     Route::get('/clients', [ClientsController::class, 'view_all'])->name('clients');
     Route::get('/fetch_clients', [ClientsController::class, 'fetch_clients'])->name('fetch_clients');
+    Route::post('/fetch_clients_data', [ClientsController::class, 'fetch_clients_data'])->name('fetch_clients_data');
     Route::post('/delete_client', [ClientsController::class, 'delete_client'])->name('delete_client');
     Route::post('/approve_client', [ClientsController::class, 'approve_client'])->name('approve_client');
 
@@ -71,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employees', [EmployeesController::class, 'view_all'])->name('employees');
     Route::post('/fetch_employees', [EmployeesController::class, 'fetch_employees'])->name('fetch_employees');
     Route::post('/update_employee', [EmployeesController::class, 'update_employee'])->name('update_employee');
+    Route::post('/fetch_employees_data', [EmployeesController::class, 'fetch_employees_data'])->name('fetch_employees_data');
 
     #Payables
     Route::get('/payables', [PayablesController::class, 'fetch_payables_all'])->name('payables');
@@ -105,6 +107,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/change_coordinator_status', [ServiceCoordinatorController::class, 'change_coordinator_status'])->name('change_coordinator_status');
     Route::post('/fetch_available_clients', [ServiceCoordinatorController::class, 'fetch_available_clients'])->name('fetch_available_clients');
     Route::post('/clients_assignment', [ServiceCoordinatorController::class, 'clients_assignment'])->name('clients_assignment');
+    Route::post('/fetch_coordinators', [ServiceCoordinatorController::class, 'fetch_coordinators'])->name('fetch_coordinators');
 
     #reports
     Route::get('/fetch_all_reports', [ReportsController::class, 'fetch_all_reports'])->name('fetch_all_reports');

@@ -60,6 +60,11 @@ class ClientsController extends Controller
         }
         return Client::all();
     }
+    public function fetch_clients_data()
+    {
+        $client = Client::select('id', 'first_name', 'last_name','email')->get();
+        return response()->json($client);
+    }
     
 }
 

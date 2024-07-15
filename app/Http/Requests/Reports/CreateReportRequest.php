@@ -28,6 +28,8 @@ class CreateReportRequest extends FormRequest
             'description' =>'required|max:255',
             'report_date' =>'required|date',
             'uploaded_by' => 'max:255',
+            'report_destination' => 'required|in:1,2,3',
+            'destination_account' => 'required|array|min:1',
             'report_file.*' => 'required|file|mimes:jpg,jpeg,png,bmp,pdf,xlsx',
         ];
     }

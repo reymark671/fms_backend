@@ -8,6 +8,7 @@
                 <th>ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
+                <th>Email</th>
                 <th>Client Name</th>
                 <th>Service Code</th>
                 <th>Uploaded File</th>
@@ -20,6 +21,7 @@
                     <td>{{$data->id}}</td>
                     <td>{{$data->first_name}}</td>
                     <td>{{$data->last_name}}</td>
+                    <td>{{$data->email}}</td>
                     <td>{{$data->client->first_name }}  {{$data->client->last_name }}</td>
                     <td>{{$data->service_code ?? 'None'}} </td>
                     <td>

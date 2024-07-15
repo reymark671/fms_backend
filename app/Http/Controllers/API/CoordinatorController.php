@@ -115,19 +115,22 @@ class CoordinatorController extends Controller
             return response()->json(['error' => 'Validation failed'], 400);
         }
         $fms_reports        = Reports::get();
+        $fms_reports = Reports::where('report_destination_type', 1)
+            ->whereRaw("FIND_IN_SET($coordinator_id, report_destination_account_id)")
+            ->get();
         $assignedClients    = CoordinatorAssignment::where('coordinator_id', $coordinator_id)->pluck('client_id');
-        $payables_report    = Payable::whereIn('id', $assignedClients)
+        $payables_report    = Payable::whereIn('client_id', $assignedClients)
                                  ->whereNotNull('response_file')
                                  ->with(['client' => function($query) {
                                     $query->select('id', 'first_name', 'last_name');
                                 }])
                                  ->get();
-        $payroll_report     = Payroll::whereIn('id', $assignedClients)
+        $payroll_report     = Payroll::whereIn('client_id', $assignedClients)
                                 ->with(['client' => function($query) {
                                     $query->select('id', 'first_name', 'last_name');
                                 }])
                                 ->get();
-        $client_file        = ClientFileUpload::whereIn('id', $assignedClients)
+        $client_file        = ClientFileUpload::whereIn('client_id', $assignedClients)
                                 ->with(['client' => function($query) {
                                     $query->select('id', 'first_name', 'last_name');
                                 }])->get();

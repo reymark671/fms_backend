@@ -13,8 +13,12 @@ class ReportsController extends Controller
 
     public function fetch_all_reports()
     {
-        $reports = Reports::get();
-        return view('pages.reports',['reports' => $reports]);
+        $reports = Reports::all()->map(function ($report) {
+            $report->load('users'); // Eager load the 'users' relationship if necessary
+            $report->destination_account_full_names = $report->getDestinationAccountFullNamesAttribute();
+            return $report;
+        });
+        return view('pages.reports', ['reports' => $reports]);
     }
     public function upload_report(CreateReportRequest $request)
     {
@@ -28,6 +32,8 @@ class ReportsController extends Controller
             $concatenatedFileUrls = implode('|', $fileUrls);
             $validatedData = $request->validated();
             $validatedData['report_file'] = $concatenatedFileUrls;
+            $validatedData['report_destination_type'] = $request->input('report_destination');
+            $validatedData['report_destination_account_id'] = implode(',', $request->input('destination_account'));
             $vendor = Reports::create($validatedData);
             return response()->json(['message' => 'report was created successfully', 'status' => 200]);
         }

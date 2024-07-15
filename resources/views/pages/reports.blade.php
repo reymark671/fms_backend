@@ -6,12 +6,24 @@
          
         </div>
     </div>
+    <div class="row m-4">
+        <div class="col-md-12">
+            <label for="filter_portal">Filter by Portal Destination:</label>
+            <select id="filter_portal" class="form-select">
+                <option value="">All</option>
+                <option value="1">Coordinator</option>
+                <option value="2">Employee</option>
+                <option value="3">Client</option>
+            </select>
+        </div>
+    </div>
     <div class="row  m-4">
             <div class="col-md-12">
                 <table class="table is-striped" id="reports_table">
                     <thead>
                     <tr>
-                        
+                        <th>Report Destination Portal</th>
+                        <th>Accounts</th>
                         <th>Report Type</th>
                         <th>Description</th>
                         <th>Report Date</th>
@@ -21,7 +33,40 @@
                     </thead>
                     <tbody>
                     @foreach($reports as $report)
-                            <tr >
+                            <tr class="portal-type-{{ $report->report_destination_type }}">
+                                <td>
+                                    @php
+                                        $typeBadgeClass = 'badge badge-secondary';
+                                        $typeName = 'Unknown'; // Default type name
+                                        switch ($report->report_destination_type) {
+                                            case 1:
+                                                $typeName = 'Coordinator';
+                                                $typeBadgeClass = 'badge badge-primary';
+                                                break;
+                                            case 2:
+                                                $typeName = 'Employee';
+                                                $typeBadgeClass = 'badge badge-success';
+                                                break;
+                                            case 3:
+                                                $typeName = 'Client';
+                                                $typeBadgeClass = 'badge badge-info';
+                                                break;
+                                        }
+                                    @endphp
+                                    <span class="{{ $typeBadgeClass }}">{{ $typeName }}</span>
+                                </td>
+                                <td>
+                                @if ($report->destination_account_full_names)
+                                    @php
+                                        $names = explode(',', $report->destination_account_full_names);
+                                    @endphp
+                                    @foreach ($names as $name)
+                                        <span class="badge badge-primary">{{ $name }}</span>
+                                    @endforeach
+                                @else
+                                    <span class="badge badge-secondary">No Accounts</span>
+                                @endif
+                                </td>
                                 <td>{{ $report->report_type }}</td>
                                 <td>{{ $report->description }}</td>
                                 <td>{{ $report->report_date }}</td>
@@ -39,6 +84,9 @@
     </div>
 </div>
 @include('modals.reports_add_modal')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Include Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 $(document).ready(function(){
     var csrf= $('#logout-form').find('input[name="_token"]').val();
@@ -55,6 +103,16 @@ $(document).ready(function(){
         });
     $(this).on('click','.btn_reports_add', function(){
         $('#report_modal').modal('toggle');
+    });
+    $('#filter_portal').change(function(){
+        var selectedPortal = $(this).val();
+        
+        if (selectedPortal) {
+            $('#reports_table tbody tr').hide();
+            $('.portal-type-' + selectedPortal).show();
+        } else {
+            $('#reports_table tbody tr').show();
+        }
     });
     $(this).on('click','.btn_report_cancel', function(){
                 $('#report_modal').modal('toggle');
@@ -140,9 +198,53 @@ $(document).ready(function(){
                 }
             });
         })
+    $(this).on('change','#report_destination', function(){
+        var report_dest = $(this).val();
+        console.log(report_dest);
+        var fetch_route;
+        if (report_dest === '1') fetch_route = "{{ route('fetch_coordinators') }}";
+        if (report_dest === '2') fetch_route = "{{ route('fetch_employees_data') }}";
+        if (report_dest === '3') fetch_route = "{{ route('fetch_clients_data') }}";
+        $.ajax({
+            url: fetch_route,
+            type: 'post',
+            headers: {
+                'X-CSRF-TOKEN': csrf
+                },
+            success: function(response) {
+                var select = $('#destination_account');
+                        select.empty();
+                        $.each(response, function(key, value) {
+                            select.append('<option value="' + value.id + '">' + value.first_name + " " + value.last_name + '</option>');
+                        });
+                        select.select2({
+                            dropdownParent: $('#report_modal')
+                        });
+            },
+            error: function(error) {
+                
+            }
+            });
+                
+                
+    });
     
     $(this).on('click','.btn_report_upload', function(){
             var formData =new FormData($('#form_report')[0]);
+            let reportType = $('#report_type').val();
+            let description = $('#description').val();
+            let reportDate = $('#report_date').val();
+            let reportFile = $('input[name="report_file[]"]')[0].files;
+
+            if (!reportType || !description || !reportDate || reportFile.length === 0) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Please fill all fields and select at least one file.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
             Swal.fire({
                 title: "Are you sure you want to save this file?",
                 icon: "warning",
@@ -185,8 +287,7 @@ $(document).ready(function(){
                         }, 2000);
                     },
                     error: function(error) {
-            
-                        console.error('Error uploading file:', error);
+                        
                     }
                     });
                 

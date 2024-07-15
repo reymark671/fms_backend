@@ -65,4 +65,9 @@ class ServiceCoordinatorController extends Controller
         return response()->json(['message' => 'Clients successfully assigned'], 200);
 
     }
+    public function fetch_coordinators()
+    {
+        $coordinators = Coordinator::select('id', 'first_name', 'last_name','email') ->get();
+        return response()->json($coordinators);
+    }
 }

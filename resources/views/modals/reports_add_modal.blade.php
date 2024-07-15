@@ -6,7 +6,22 @@
                 
                 <div class="mb-2">
                    <form action="" id="form_report" enctype="multipart/form-data">
-                   
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Report Destinaton Portal</label>
+                            <select class="form-control" id="report_destination" name="report_destination" required>
+                                <option value="1">Coordinators</option>
+                                <option value="2">Employees</option>
+                                <option value="3">Clients</option>
+                            </select>
+                            <input type="hidden" id="coordinator_id"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Select Account</label>
+                            <select class="form-control" id="destination_account" name="destination_account[]" multiple="multiple" required>
+                                <option value="">Select Account</option>
+                            </select>
+                            <input type="hidden" id="coordinator_id"></input>
+                        </div>
                         <div class="has-name is-fullwidth mb-2">
                             <label for="title">Report Type</label>
                                 <input class="form-control" type="text" name="report_type" id="report_type" placeholder="type of the report file">

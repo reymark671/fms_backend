@@ -21,6 +21,11 @@ class EmployeesController extends Controller
         $employees = Employee::where('client_id', $client_id)->get();
         return response()->json(['data' => $employees]);
     }
+    public function fetch_employees_data()
+    {
+        $employees = Employee::select('id', 'first_name', 'last_name','email')->get();
+        return response()->json($employees );
+    }
     public function update_employee(UpdateEmployeesRequest $data)
     {
         $employee = Employee::find($data->input('id'));

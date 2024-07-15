@@ -11,6 +11,7 @@ use App\Http\Controllers\API\VendorController;
 use App\Http\Controllers\API\CoordinatorController;
 use App\Http\Controllers\API\ResourcesController;
 use App\Http\Controllers\API\HiredEmployeesController;
+use App\Http\Controllers\API\ReportsController;
 use App\Http\Controllers\EmailSender;
 
 /*
@@ -89,5 +90,8 @@ Route::post('/change_password_coordinator', [CoordinatorController::class, 'chan
 Route::get('/fetch_resources', [ResourcesController::class, 'fetch_resources'])->name('fetch_resources');
 Route::post('/upload_files', [ResourcesController::class, 'store_file'])->name('upload_files');
 Route::post('/fetch_file_uploads', [ResourcesController::class, 'fetch_store_file'])->name('fetch_file_uploads');
+
+#reports
+Route::get('/fetch_reports_client', [ReportsController::class, 'fetch_reports_client'])->name('fetch_reports_client');
 
 
