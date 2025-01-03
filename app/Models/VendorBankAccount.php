@@ -4,22 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class VendorsInvoice extends Model
+class VendorBankAccount extends Model
 {
-    use SoftDeletes;
     use HasFactory;
+    protected $table = 'vendor_bank_account';
     protected $fillable = [
-        'description',
         'vendor_id',
-        'date_purchased',
-        'client_name',
-        'client_id',
-        'invoice_price',
-        'invoice_file',
-        'is_client_approved',
-        'is_complete'
+        'account_type',
+        'bank_name',
+        'routing_number',
+        'account_number',
+        'paystub_copy'
     ];
 
     public function vendor()

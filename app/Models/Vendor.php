@@ -22,7 +22,13 @@ class Vendor extends Model
         'zipcode',
         'username',
         'password',
+        'signature_date',
         'otp',
+        'tin',
         'is_active'
     ];
+    public function vendorBankAccounts()
+    {
+        return $this->hasMany(VendorBankAccount::class, 'vendor_id');
+    }
 }
