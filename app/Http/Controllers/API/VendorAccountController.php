@@ -316,7 +316,7 @@ class VendorAccountController extends Controller
       
         $pdf = new Fpdi();
         
-        $pageCount = $pdf->setSourceFile(public_path('uploads/w9fileform.pdf'));
+        $pageCount = $pdf->setSourceFile(public_path('w9fileform.pdf'));
         for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
             $template = $pdf->importPage($pageNo);
             $size = $pdf->getTemplateSize($template);
