@@ -8,11 +8,13 @@ use App\Http\Controllers\API\PayrollController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\PayablesController;
 use App\Http\Controllers\API\VendorController;
+use App\Http\Controllers\API\VendorAccountController;
 use App\Http\Controllers\API\CoordinatorController;
 use App\Http\Controllers\API\ResourcesController;
 use App\Http\Controllers\API\HiredEmployeesController;
 use App\Http\Controllers\API\ReportsController;
 use App\Http\Controllers\EmailSender;
+use App\Http\Controllers\API\ClientVendorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +43,11 @@ Route::post('/login_auth', [LoginController::class, 'login'])->name('api/login_a
 Route::post('/otp_verification', [LoginController::class, 'otp_verification'])->name('otp_verification');
 Route::post('/reset_password_client', [LoginController::class, 'reset_password_client'])->name('reset_password_client');
 Route::post('/change_password_client', [LoginController::class, 'change_password_client'])->name('change_password_client');
+
+#client vendor API
+Route::post('/client_fetch_vendors_invoice', [ClientVendorController::class, 'clientFetchVendorsInvoice'])->name('client_fetch_vendors_invoice');
+Route::post('/clientApproveInvoice', [ClientVendorController::class, 'approveInvoice'])->name('clientApproveInvoice');
+Route::post('/clientDeclineInvoice', [ClientVendorController::class, 'declineInvoice'])->name('clientDeclineInvoice');
 
 #employee 
 Route::post('/add_employee', [EmployeeController::class, 'add_employee']);
@@ -76,6 +83,22 @@ Route::post('/reset_password_vendor', [VendorController::class, 'reset_password_
 Route::post('/upload_invoice', [VendorController::class, 'upload_invoice'])->name('upload_invoice');
 Route::post('/fetch_invoices_vendor', [VendorController::class, 'fetch_invoices_vendor'])->name('fetch_invoices_vendor');
 Route::post('/change_password_vendor', [VendorController::class, 'change_password_vendor'])->name('change_password_vendor');
+Route::post('/send_email_vend', [EmailSender::class, 'send_email_vend'])->name('send_email_vend');
+
+#vendor account API
+Route::post('/fetch_account', [VendorAccountController::class, 'fetchVendorAccount'])->name('fetch_vendor_account');
+Route::post('/fetch_account_status', [VendorAccountController::class, 'fetchAccountStatus'])->name('fetch_account_status');
+Route::post('/fetch_account_signature', [VendorAccountController::class, 'fetchAccountSignature'])->name('fetch_account_signature');
+Route::post('/update_account_signature', [VendorAccountController::class, 'UpdateAccountSignatureText'])->name('update_account_signature');
+Route::post('/update_account_signature_draw', [VendorAccountController::class, 'UpdateAccountSignatureDraw'])->name('update_account_signature_draw');
+Route::post('/update_bank_account', [VendorAccountController::class, 'UpdateBankAccount'])->name('update_bank_account');
+Route::get('/fetch_bank_account', [VendorAccountController::class, 'fetchBankAccount'])->name('fetch_bank_account');
+Route::post('/update_vendor_account', [VendorAccountController::class, 'UpdateVendorAccount'])->name('update_vendor_account');
+Route::post('/search_client', [VendorAccountController::class, 'searchClient'])->name('search_client');
+Route::post('/client_enrollment_to_vendor', [VendorAccountController::class, 'clientEnrollment'])->name('client_enrollment_to_vendor');
+Route::get('/fetch_enrolled_accounts', [VendorAccountController::class, 'getEnrolledAccounts'])->name('fetch_enrolled_accounts');
+Route::get('/fetch_client_enrolled_accounts', [VendorAccountController::class, 'fetchClientEnrolledAccounts'])->name('fetch_client_enrolled_accounts');
+Route::get('/fetch_w9_form', [VendorAccountController::class, 'fetchW9Form'])->name('fetch_w9_form');
 
 
 #coordinators API

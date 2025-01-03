@@ -8,6 +8,7 @@ use App\Mail\ClientSendMail;
 use App\Models\Employee;
 use App\Models\MailSender;
 use App\Models\Client;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 class EmailSender extends Controller
@@ -88,5 +89,44 @@ class EmailSender extends Controller
        }
         return response()->json(['message' => 'Message has been sent', 'status'=> 200], 200);
         
+    }
+    public function send_email_vend(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'subject'    => 'required|string',
+            'message'    => 'required|string',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        $token = $request->bearerToken();
+        $verification_Details = explode("$", $token);
+        $vendor_id = $verification_Details[1];
+        $token = $verification_Details[0];
+        $vendor = Vendor::find($vendor_id);
+        if (!$vendor) {
+            return response()->json(['error' => 'Record not found'], 404);
+        }
+        $vendor_name = $vendor->first_name." ".$vendor->last_name;
+        $vendor_email = $vendor->email;
+        $recipient_email = env('MAIL_SUPPORT');
+        $vendor = MailSender::create([
+            'subject'   => $request->input('subject'),
+            'message'   => $request->input('message'),
+            'recipient' => $recipient_email,
+            'sender'    => $vendor_email,
+        ]);
+     
+       try
+       {
+        $send_mail = new EmployeeSendMail($recipient_email, $request->input('subject'), $request->input('message'),$vendor_name);
+        Mail::to($recipient_email)->send($send_mail);
+       }
+       catch(Exception $e)
+       {
+        return response()->json(['message' => $e->getMessage()]);
+       }
+        return response()->json(['message' => 'Message has been sent', 'status'=> 200], 200);
+
     }
 }

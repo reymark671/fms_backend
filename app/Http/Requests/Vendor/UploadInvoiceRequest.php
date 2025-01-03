@@ -27,6 +27,7 @@ class UploadInvoiceRequest extends FormRequest
             'description' =>'required|max:255',
             'date_purchased' =>'required|date',
             'client_name' =>'required|max:255',
+            'client_id' =>'required|exists:clients,id',
             'invoice_price' => 'required|numeric',
             'invoice_file' => 'required|file|mimes:jpg,jpeg,png,bmp',
         ];
